@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.my_springboot_learn.mapper.UserMapper">
+<mapper namespace="com.example.my_springboot_learn.mapper.test2.UserTest2Mapper">
     <cache type="com.example.my_springboot_learn.redis.cache.RedisCache"/>
 
     <!--获取全部User-->
