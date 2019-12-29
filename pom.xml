@@ -73,11 +73,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-api-easymock</artifactId>
             <version>1.6.1</version>
@@ -95,7 +90,7 @@
             <version>3.2</version>
             <scope>test</scope>
         </dependency>
-    </dependencies>
+
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-io</artifactId>
@@ -159,14 +154,8 @@
                 <!--<skipTests>false</skipTests>-->
                 <!--</configuration>-->
             </plugin>
-            <!-- Éú³É²âÊÔ¸²¸ÇÂÊ±¨¸æµÄ²å¼þ -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>cobertura-maven-plugin</artifactId>
-                <version>2.7</version>
-            </plugin>
 
-            <!--ÉèÖÃÓ¦ÓÃ Main ²ÎÊýÆô¶¯ÒÀÀµ²éÕÒµÄµØÖ·Ö¸ÏòÍâ²¿ lib ÎÄ¼þ¼Ð-->
+            <!--è®¾ç½®åº”ç”¨ Main å‚æ•°å¯åŠ¨ä¾èµ–æŸ¥æ‰¾çš„åœ°å€æŒ‡å‘å¤–éƒ¨ lib æ–‡ä»¶å¤¹-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -179,7 +168,7 @@
                     </archive>
                 </configuration>
             </plugin>
-            <!--ÉèÖÃ SpringBoot ´ò°ü²å¼þ²»°üº¬ÈÎºÎ Jar ÒÀÀµ°ü-->
+            <!--è®¾ç½® SpringBoot æ‰“åŒ…æ’ä»¶ä¸åŒ…å«ä»»ä½• Jar ä¾èµ–åŒ…-->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -192,7 +181,7 @@
                     </includes>
                 </configuration>
             </plugin>
-            <!--ÉèÖÃ½« lib ¿½±´µ½Ó¦ÓÃ Jar ÍâÃæ-->
+            <!--è®¾ç½®å°† lib æ‹·è´åˆ°åº”ç”¨ Jar å¤–é¢-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
