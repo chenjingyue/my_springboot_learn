@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.my_springboot_learn.mapper.UserMapper">
-    <cache type="com.example.my_springboot_learn.redis.cache.RedisCache"/>
+    <!--<cache type="com.example.my_springboot_learn.redis.cache1.RedisCache"/>-->
 
     <!--获取全部User-->
     <select id="selectAllUser" resultType="com.example.my_springboot_learn.model.User">

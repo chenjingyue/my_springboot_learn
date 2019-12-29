@@ -6,6 +6,7 @@ import com.example.my_springboot_learn.model.User;
 import com.example.my_springboot_learn.service.IUserService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,11 +22,13 @@ public class UserService implements IUserService {
     private UserMapper userMapper;
 
     @Override
+    @Cacheable(value = "user", keyGenerator = "myKeyGenerator")
     public List<User> selectAllUser() throws Exception {
         return userMapper.selectAllUser();
     }
 
     @Override
+    @Cacheable(value = "user", keyGenerator = "myKeyGenerator")
     public User selectUserById(int id) throws Exception {
         return userMapper.selectUserById(id);
     }
