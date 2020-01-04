@@ -3,10 +3,7 @@ package com.example.my_springboot_learn.controller;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -40,5 +37,11 @@ public class FileController {
             IOUtils.closeQuietly(outputStream);
         }
         return "success";
+    }
+
+    @GetMapping("/file/name")
+    public String getName(@RequestParam("name") String name) {
+        logger.info("name:{}",name);
+        return name;
     }
 }

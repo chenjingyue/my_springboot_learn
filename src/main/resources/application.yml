@@ -5,7 +5,7 @@ spring:
     url: jdbc:mysql://192.168.1.102:3306/yunjiantest
     username: root
     password: chenyu123
-    driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
   redis:
     database: 0
     host: 192.168.1.113
