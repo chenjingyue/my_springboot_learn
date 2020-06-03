@@ -54,19 +54,39 @@ public class ProxyFactory {
     public static String getClassContent(Class clazz) {
         String content = "";
         String interfaceName = clazz.getSimpleName();
-        String packageContent = "package " + packageName + semicolonLine;
-        String importContent = "import " + clazz.getName() + semicolonLine;
-        String classNameContent = "public class " + className + " implements " + interfaceName + " {" + line;
-        String filed = tab + "private " + clazz.getSimpleName() + " " + filedName + semicolonLine;
-        String construct = tab + "public " + className + "(" + interfaceName + " " + filedName + ") {" + line +
-                doubleTab + "this." + filedName + " = " + filedName + semicolonLine +
-                tab + "}" + line;
-
+        String packageContent = getPackageContent();
+        String importContent = getImportContent(clazz.getName());
+        String classNameContent = getClassNameContent(interfaceName);
+        String filed = getFiled(interfaceName);
+        String construct = getConstructContent(interfaceName);
         String methodContents = geMethodContent(clazz);
+
         content += packageContent + importContent + classNameContent +
                 filed + construct + methodContents + "}";
 
         return content;
+    }
+
+    private static String getFiled(String simpleName) {
+        return tab + "private " + simpleName + " " + filedName + semicolonLine;
+    }
+
+    private static String getClassNameContent(String interfaceName) {
+        return "public class " + className + " implements " + interfaceName + " {" + line;
+    }
+
+    private static String getConstructContent(String interfaceName) {
+        return tab + "public " + className + "(" + interfaceName + " " + filedName + ") {" + line +
+                doubleTab + "this." + filedName + " = " + filedName + semicolonLine +
+                tab + "}" + line;
+    }
+
+    private static String getPackageContent() {
+        return "package " + packageName + semicolonLine;
+    }
+
+    private static String getImportContent(String name) {
+        return "import " + name + semicolonLine;
     }
 
     private static String geMethodContent(Class clazz) {
@@ -88,6 +108,32 @@ public class ProxyFactory {
             String methodContent = tab + "public " + method.getReturnType().getSimpleName() + " "
                     + method.getName() + "(" + "" + ") {" + line
                     + doubleTab + "return " + filedName + "." + method.getName() + "(" + parameter + ")" + semicolonLine
+                    + tab + "}";
+            methodContents += methodContent + line;
+        }
+        return methodContents;
+    }
+
+    private static String geMethodContent1(Class clazz, InvocationHandler handler) {
+        String methodContents = "";
+        Method[] methods = clazz.getMethods();
+        for (Method method : methods) {
+            String parameterNames = "";
+            String parameter = "";
+            int index = 0;
+            Class<?>[] parameterTypes = method.getParameterTypes();
+            if (parameterTypes.length > 0) {
+                for (Class<?> parameterType : parameterTypes) {
+                    parameterNames = parameterType.getSimpleName() + " arg" + index + ",";
+                    parameter = "arg" + index + ",";
+                }
+                parameterNames = parameterNames.substring(0, parameterNames.length() - 1);
+                parameter = parameterNames.substring(0, parameter.length() - 1);
+            }
+            String methodContent = tab + "public " + method.getReturnType().getSimpleName() + " "
+                    + method.getName() + "(" + "" + ") {" + line
+                    + doubleTab + "return (" + method.getReturnType().getSimpleName() + ") "
+                    + filedName + "." + handler.getClass().getMethods()[0].getName() + "(" + parameter + ")" + semicolonLine
                     + tab + "}";
             methodContents += methodContent + line;
         }
@@ -119,12 +165,31 @@ public class ProxyFactory {
 
     }
 
-    public static Object getProxyObject(Class<?>[] interfaces, InvocationHandler h) {
+    public static Object getProxyObject(Class<?>[] interfaces, InvocationHandler handler) {
         /**
          * ClassLoader loader,
          * Class<?>[] interfaces,
          * InvocationHandler h
          */
+        String content = "";
+        // 目标对象的接口名
+        String interfaceName = handler.getClass().getSimpleName();
+        String packageContent = getPackageContent();
+        String interfaceNames = "";
+        String importContent = "";
+        String methodContents = "";
+        for (Class<?> anInterface : interfaces) {
+            interfaceNames += anInterface.getSimpleName() + ",";
+            importContent += getImportContent(anInterface.getName());
+            methodContents += geMethodContent1(anInterface, handler);
+        }
+        interfaceNames = interfaceNames.substring(0, interfaceNames.length() - 1);
+        String classNameContent = getClassNameContent(interfaceNames);
+        String filed = getFiled(interfaceName);
+        String construct = getConstructContent(interfaceName);
+        content += packageContent + importContent + classNameContent +
+                filed + construct + methodContents + "}";
+        System.out.println(content);
 
         return null;
     }
@@ -134,9 +199,14 @@ public class ProxyFactory {
 //        ITestProxy proxyObject = (ITestProxy) getProxyObject(target);
 //        String query = proxyObject.query();
 //        System.out.println(query);
-        String str = "com.demo.proxy";
-        String result = str.replaceAll("\\.", "\\" + File.separator);
-        System.out.println(result);
+
+//        String str = "com.demo.proxy";
+//        String result = str.replaceAll("\\.", "\\" + File.separator);
+//        System.out.println(result);
         //            packageName.replaceAll("\\.", File.separator);
+
+        Class<?>[] interfaces = new Class[]{ITestProxy.class};
+        getProxyObject(interfaces, new MyInvocationHandler());
     }
+
 }
