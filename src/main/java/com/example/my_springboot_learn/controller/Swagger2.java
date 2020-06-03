@@ -29,9 +29,9 @@ public class Swagger2 {
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("springboot利用swagger构建api文档")
-                .description("简单优雅的restfun风格，http://blog.csdn.net/forezp")
+                .description("简单优雅的restfun风格。")
                 .termsOfServiceUrl("http://blog.csdn.net/forezp")
-                .version("1.0")
+                .version("2.0")
                 .build();
     }
 }
