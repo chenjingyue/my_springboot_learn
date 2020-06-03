@@ -4,7 +4,6 @@ import com.example.my_springboot_learn.mapper.UserMapper;
 import com.example.my_springboot_learn.model.QueryCondition;
 import com.example.my_springboot_learn.model.User;
 import com.example.my_springboot_learn.service.IUserService;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
