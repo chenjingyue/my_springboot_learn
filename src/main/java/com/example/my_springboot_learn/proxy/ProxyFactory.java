@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 
@@ -22,7 +23,7 @@ public class ProxyFactory {
     private static final String filedName = "target";
     private static final String packageName = "com.demo.proxy";
     private static final String className = "$Proxy";
-    private static final String basePath = "G:\\GitCode\\test";
+    private static final String basePath = "F:\\GitCode\\test";
     private static final String parentPath = basePath + File.separator +
             packageName.replace(".", File.separator);
     private static final String filePath = parentPath + File.separator + className + ".java";
@@ -63,7 +64,6 @@ public class ProxyFactory {
 
         content += packageContent + importContent + classNameContent +
                 filed + construct + methodContents + "}";
-        System.out.println(content);
         return content;
     }
 
@@ -177,9 +177,8 @@ public class ProxyFactory {
 
 
         // load into memory and create an instance
-        URL[] urls = new URL[]{new URL("file:/"
-                + basePath)};
-        URLClassLoader ul = new URLClassLoader(urls,ClassLoader.class.getClassLoader());
+        URL[] urls = new URL[]{new URL("file:/" + basePath + File.separator)};
+        URLClassLoader ul = new URLClassLoader(urls);
         Class<?> aClass = ul.loadClass(packageName + "." + className);
         return aClass;
 
@@ -226,21 +225,22 @@ public class ProxyFactory {
         return null;
     }
 
-    public static void main(String[] args) {
-        TestProxy target = new TestProxy();
-        ITestProxy proxyObject = (ITestProxy) getProxyObject(target);
-        String query = proxyObject.query("ggg");
-        System.out.println(query);
+    public static void main(String[] args) throws Exception {
+//        TestProxy target = new TestProxy();
+//        ITestProxy proxyObject = (ITestProxy) getProxyObject(target);
+//        String query = proxyObject.query("ggg");
+//        System.out.println(query);
+
 
 //        String str = "com.demo.proxy";
 //        String result = str.replaceAll("\\.", "\\" + File.separator);
 //        System.out.println(result);
         //            packageName.replaceAll("\\.", File.separator);
 
-//        Class<?>[] interfaces = new Class[]{ITestProxy.class};
-//        ITestProxy proxyObject = (ITestProxy) getProxyObject(interfaces, new MyInvocationHandler());
+        Class<?>[] interfaces = new Class[]{ITestProxy.class};
+        ITestProxy proxyObject = (ITestProxy) getProxyObject(interfaces, new MyInvocationHandler());
 //        System.out.println(proxyObject);
-//        System.out.println(proxyObject.query("hhh"));
+        System.out.println(proxyObject.query("hhh"));
     }
 
 }
