@@ -9,6 +9,6 @@ public class Test {
         ITestProxy proxy = (ITestProxy)Proxy.newProxyInstance(Test.class.getClassLoader(),
                 interfaces, new MyInvocationHandler());
 
-        proxy.query();
+        proxy.query("shhh");
     }
 }
