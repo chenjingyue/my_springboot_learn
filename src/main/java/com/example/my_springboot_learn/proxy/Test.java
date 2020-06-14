@@ -16,6 +16,6 @@ public class Test {
         String name = Component.class.getName();
         System.out.println(IsInheritedAnnotation.class.isAnnotationPresent(Inherited.class));
 
-        System.out.println(name);
+        proxy.query("shhh");
     }
 }
