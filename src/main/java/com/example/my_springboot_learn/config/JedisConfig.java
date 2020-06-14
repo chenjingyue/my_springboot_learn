@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Configuration;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
+import java.lang.reflect.Proxy;
+
 @Configuration
 public class JedisConfig {
     private static final Logger logger = LogManager.getLogger(JedisConfig.class);
