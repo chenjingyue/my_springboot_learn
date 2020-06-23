@@ -26,44 +26,6 @@ public class UserService implements IUserService {
         return userMapper.selectAllUser();
     }
 
-    @Override
-    @Cacheable(value = "user", keyGenerator = "myKeyGenerator")
-    public User selectUserById(int id) throws Exception {
-        return userMapper.selectUserById(id);
-    }
-
-    @Override
-    public void updateUserById(User user) throws Exception {
-        userMapper.updateUserById(user);
-    }
-
-    @Override
-    public void insertUser(User user) throws Exception {
-            userMapper.insertUser(user);
-    }
-
-    @Override
-    public List<User> queryByCondition(QueryCondition queryCondition) throws Exception {
-
-
-        Integer pageNow = queryCondition.getPageNow();
-        Integer pageSize = queryCondition.getPageSize();
-        if (null != pageNow && null != pageSize) {
-            int start = (pageNow - 1) * pageSize;
-            queryCondition.setStart(start);
-        }
-
-        return userMapper.queryByCondition(queryCondition);
-    }
-
-    @Override
-    public List<User> queryByLimit(int page, int pageSize) throws Exception {
-        Map<String, Integer> map = new HashMap<>();
-        int start = (page - 1) * pageSize;
-        map.put("start", start);
-        map.put("pageSize", pageSize);
-        return userMapper.queryByLimit(map);
-    }
 
 
 }
