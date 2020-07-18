@@ -1,27 +1,45 @@
 package com.example.my_springboot_learn.component;
 
 
-import com.example.my_springboot_learn.config.B;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import java.lang.reflect.Constructor;
-import java.util.Arrays;
+import javax.annotation.PostConstruct;
 
 @Component
-@Scope("prototype")
-public class OrderService {
+public class OrderService implements BeanFactoryAware, InitializingBean {
+
+    @Autowired
+    private AccountService accountService;
 
 
     public OrderService() {
         System.out.println("default OrderService");
     }
 
-    @Autowired(required = false)
-    public OrderService(B b) {
-        System.out.println("OrderService----->b");
+    @Override
+    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
+        System.out.println("aaaaaa");
     }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        System.out.println("aaaaaa");
+    }
+
+    @PostConstruct
+    public void init() throws Exception {
+        System.out.println("aaaaaa");
+    }
+
+//    @Autowired(required = false)
+//    public OrderService(B b) {
+//        System.out.println("OrderService----->b");
+//    }
 
 
 //    @Autowired(required = true)
