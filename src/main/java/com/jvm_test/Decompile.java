@@ -105,6 +105,15 @@ public class Decompile {
         nameAndTypeMap2.put("len", 2);
         attrList.add(nameAndTypeMap2);
         CONSTANT_POOL_TYPE.put(12, nameAndTypeInfo);
+
+        ConstantType stringInfo = new ConstantType();
+        stringInfo.setName("CONSTANT_String_info");
+        attrList = stringInfo.getAttrList();
+        Map<String, Object> stringMap1 = new HashMap<>();
+        stringMap1.put("name", "String");
+        stringMap1.put("len", 2);
+        attrList.add(stringMap1);
+        CONSTANT_POOL_TYPE.put(8, stringInfo);
     }
 
 
@@ -148,7 +157,7 @@ public class Decompile {
             for (int i = 0; i < count; i++) {
                 byte[] interfaceIndexBytes = new byte[interfaceIndexLen];
                 getBytes(bytes, interfaceIndexBytes);
-                int index = byteArrayToInt(interfaceBytes);
+                int index = byteArrayToInt(interfaceIndexBytes);
                 offset += interfaceIndexLen;
             }
         }
@@ -186,7 +195,7 @@ public class Decompile {
         System.out.println("常量池大小：" + byteArrayToInt(constantPoolCountBytes));
         offset += constantPoolCountLen;
 
-        for (int c = 1; c < constantPool; c++) {
+        for (int c = 0; c < constantPool-1; c++) {
 
             ConstantType type = new ConstantType();
             List list = type.getAttrList();
