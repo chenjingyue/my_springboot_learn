@@ -12,7 +12,7 @@ public class Test {
 //        System.out.println(ac.getBean(B.class));
 //        System.out.println(ac.getBean(B.class));
 //        System.out.println(ac.getBean(A.class).getB());
-ac.getBean(OrderService.class);
-ac.getBean(OrderService.class);
+//ac.getBean(OrderService.class);
+//ac.getBean(OrderService.class);
     }
 }
