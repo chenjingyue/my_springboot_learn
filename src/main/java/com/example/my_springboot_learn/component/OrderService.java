@@ -13,6 +13,9 @@ import java.util.Arrays;
 @Scope("prototype")
 public class OrderService {
 
+    @Autowired
+    private String name;
+
 
     public OrderService() {
         System.out.println("default OrderService");
