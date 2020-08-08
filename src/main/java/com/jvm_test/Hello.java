@@ -1,5 +1,6 @@
 package com.jvm_test;
 
+import com.jvm_test.constant.ConstantMethodrefInfo;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -7,11 +8,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupp
 
 import java.io.Serializable;
 
-public class Hello   implements Serializable,ApplicationContextAware {
+public final class Hello   implements Serializable,ApplicationContextAware {
 
     public static int a = 4;
 
-    public String str = "aaa";
+    public ConstantMethodrefInfo str;
 
     public static void main(String[] args) {
 
@@ -19,6 +20,10 @@ public class Hello   implements Serializable,ApplicationContextAware {
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+
+    }
+    
+    public  static class A{
 
     }
 }

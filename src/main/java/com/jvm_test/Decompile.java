@@ -1,23 +1,28 @@
 package com.jvm_test;
 
 import com.alibaba.fastjson.JSONObject;
-import com.jvm_test.constant.ConstantType;
+import com.jvm_test.constant.*;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.CollectionUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Decompile {
+
+    private static ClassAccessFlag finalClassAccessFlag;
 
     private static int offset = 0;
     private static Map<Integer, String> JDK_VERSION = new HashMap<>();
     private static List<ConstantType> CONSTANT_POOL = new ArrayList<>();
     private static Map<Integer, ConstantType> CONSTANT_POOL_TYPE = new HashMap<>();
+    // 类访问权限
+    private static Map<Integer, ClassAccessFlag> CLASS_ACCESS_FLAGS = new LinkedHashMap<>();
+
+    private static short[] class_flags = new short[]{1, 8, 16, 32, 512, 1024, 4096, 8192, 16384};
+//    private static String[] field_flags = new String[]{"0001","0002","0004","0008","0010","0020","0200","0400","1000","2000","4000"};
 
     static {
         JDK_VERSION.put(44, "1.0");
@@ -29,6 +34,18 @@ public class Decompile {
         JDK_VERSION.put(50, "1.6");
         JDK_VERSION.put(51, "1.7");
         JDK_VERSION.put(52, "1.8");
+
+
+        CLASS_ACCESS_FLAGS.put(1, new ClassAccessFlag(1, AccessFlagConstant.ACC_PUBLIC, AccessFlagConstant.PUBLIC));
+        CLASS_ACCESS_FLAGS.put(8, new ClassAccessFlag(8, AccessFlagConstant.ACC_STATIC, AccessFlagConstant.STATIC));
+        CLASS_ACCESS_FLAGS.put(16, new ClassAccessFlag(16, AccessFlagConstant.ACC_FINAL, AccessFlagConstant.FINAL));
+        CLASS_ACCESS_FLAGS.put(32, new ClassAccessFlag(32, AccessFlagConstant.ACC_SUPER));
+        CLASS_ACCESS_FLAGS.put(512, new ClassAccessFlag(512, AccessFlagConstant.ACC_INTERFACE, AccessFlagConstant.INTERFACE));
+        CLASS_ACCESS_FLAGS.put(1024, new ClassAccessFlag(1024, AccessFlagConstant.ACC_ABSTRACT, AccessFlagConstant.ABSTRACT));
+        CLASS_ACCESS_FLAGS.put(4096, new ClassAccessFlag(4096, AccessFlagConstant.ACC_SYNTHETIC));
+        CLASS_ACCESS_FLAGS.put(8192, new ClassAccessFlag(8192, AccessFlagConstant.ACC_ANNOTATION));
+        CLASS_ACCESS_FLAGS.put(16384, new ClassAccessFlag(16384, AccessFlagConstant.ACC_ENUM, AccessFlagConstant.ENUM));
+
 
 //        CONSTANT_POOL.put(1,"CONSTANT_Utf8_info");
 //        CONSTANT_POOL.put(3,"CONSTANT_Integer_info");
@@ -118,7 +135,7 @@ public class Decompile {
 
 
     public static void main(String[] args) {
-        String classFilePath = "F:\\chenyu\\my_springboot_learn\\target\\classes\\com\\jvm_test\\Hello.class";
+        String classFilePath = "E:\\chenjingyue\\my_springboot_learn\\target\\classes\\com\\jvm_test\\Hello.class";
         File file = new File(classFilePath);
         try {
             byte[] bytes = FileUtils.readFileToByteArray(file);
@@ -128,13 +145,16 @@ public class Decompile {
             checkVersion(bytes);
             // 解析常量池
             parseConstant(bytes);
-            System.out.println(JSONObject.toJSONString(CONSTANT_POOL));
+//            System.out.println(JSONObject.toJSONString(CONSTANT_POOL));
             // 类访问控制权限
             accessFlags(bytes);
             // 类名
             thisAndSupperClass(bytes);
             // 接口
             parseInterface(bytes);
+            // 成员属性
+            parseFields(bytes);
+
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -142,60 +162,123 @@ public class Decompile {
 
     }
 
-    public static void parseFields (byte[] bytes) {
+    public static  void parseMethods(byte[] bytes) {
+        int count = readByteArrayToInt(bytes, AccessFlagConstant.METHODS_COUNT_LEN);
+        List<MethodInfo> list = new ArrayList<>();
+        if(0 < count) {
+
+        }
+    }
+
+    public static void parseFields(byte[] bytes) {
+        int count = readByteArrayToInt(bytes, AccessFlagConstant.FIELDS_COUNT_LEN);
+        List<FieldInfo> list = new ArrayList<>();
+        if (0 < count) {
+            for (int i = 0; i < count; i++) {
+                FieldInfo fieldInfo = new FieldInfo();
+                int accessFlags = readByteArrayToInt(bytes, AccessFlagConstant.ACCESS_FLAG);
+                fieldInfo.setAccessFlags(accessFlags);
+                int nameIndex = readByteArrayToInt(bytes, AccessFlagConstant.INDEX);
+                fieldInfo.setNameIndex(nameIndex);
+                int descriptorIndex = readByteArrayToInt(bytes, AccessFlagConstant.INDEX);
+                fieldInfo.setDescriptorIndex(descriptorIndex);
+                int attributeCount = readByteArrayToInt(bytes, AccessFlagConstant.COUNT);
+                fieldInfo.setAttributesCount(attributeCount);
+                if (attributeCount > 0) {
+                    List<AttributeInfo> attributeInfoList = fieldInfo.getAttributeInfoList();
+                }
+                list.add(fieldInfo);
+            }
+        }
+        System.out.println("成员属性个数： "+count);
 
     }
 
     public static void parseInterface(byte[] bytes) {
         int interfaceCountLen = 2;
         int interfaceIndexLen = 2;
-        byte[] interfaceBytes = new byte[interfaceCountLen];
-        getBytes(bytes, interfaceBytes);
-        offset += interfaceCountLen;
-        int count = byteArrayToInt(interfaceBytes);
-        if(count > 0) {
+        int count = readByteArrayToInt(bytes, interfaceCountLen);
+        if (count > 0) {
             for (int i = 0; i < count; i++) {
-                byte[] interfaceIndexBytes = new byte[interfaceIndexLen];
-                getBytes(bytes, interfaceIndexBytes);
-                int index = byteArrayToInt(interfaceIndexBytes);
-                offset += interfaceIndexLen;
+//                byte[] interfaceIndexBytes = new byte[interfaceIndexLen];
+//                getBytes(bytes, interfaceIndexBytes);
+                int index = readByteArrayToInt(bytes, interfaceIndexLen);
             }
         }
+        System.out.println("接口个数： "+count);
     }
 
 
-    public  static void thisAndSupperClass(byte[] bytes) {
+    public static void thisAndSupperClass(byte[] bytes) {
         int thisClassLen = 2;
-        byte[] thisClassBytes = new byte[thisClassLen];
-        getBytes(bytes, thisClassBytes);
-        offset += thisClassLen;
-        int thisClassIndex = byteArrayToInt(thisClassBytes);
+//        byte[] thisClassBytes = new byte[thisClassLen];
+//        getBytes(bytes, thisClassBytes);
+//        offset += thisClassLen;
+        int thisClassIndex = readByteArrayToInt(bytes, thisClassLen);
 
         int supperClassLen = 2;
-        byte[] supperClassBytes = new byte[supperClassLen];
-        getBytes(bytes, supperClassBytes);
-        offset += supperClassLen;
-        int supperClassIndex = byteArrayToInt(supperClassBytes);
+//        byte[] supperClassBytes = new byte[supperClassLen];
+//        getBytes(bytes, supperClassBytes);
+//        offset += supperClassLen;
+        int supperClassIndex = readByteArrayToInt(bytes, supperClassLen);
+        System.out.println("类名间接引用地址： " + thisClassIndex + "； 父类间接引用地址" + supperClassIndex);
     }
 
     public static void accessFlags(byte[] bytes) {
         int accessFlagsLen = 2;
-        byte[] accessFlagsBytes = new byte[accessFlagsLen];
-        getBytes(bytes, accessFlagsBytes);
-        offset += accessFlagsLen;
-//       int length = byteArrayToInt(accessFlagsBytes)
+        byte[] accessFlagsBytes =getBytes(bytes, accessFlagsLen);
+        int flag = byteArrayToInt(accessFlagsBytes);
+        List<ClassAccessFlag> list = new ArrayList<>();
+        ClassAccessFlag determine = null;
+        for (Map.Entry<Integer, ClassAccessFlag> entry : CLASS_ACCESS_FLAGS.entrySet()) {
+            Integer key = entry.getKey();
+            ClassAccessFlag value = entry.getValue();
+            if (key < flag) {
+                list.add(value);
+            } else if (key == flag) {
+                determine = value;
+            } else {
+                break;
+            }
+        }
+        if (null != determine) {
+            finalClassAccessFlag = determine;
+            return;
+        }
+        List<ClassAccessFlag> finalClassAccessFlagList = new ArrayList<>();
+        if (!CollectionUtils.isEmpty(list)) {
+            List<ClassAccessFlag> tempList = new ArrayList<>();
+            for (int i = 0; i < list.size(); i++) {
+                ClassAccessFlag classAccessFlag = list.get(i);
+                int flag1 = classAccessFlag.getFlag();
+                tempList.add(list.get(i));
+                if (flag1 < flag) {
+                    int temp = flag1;
+                    for (int j = i + 1; j < list.size(); j++) {
+                        temp |= list.get(j).getFlag();
+                        if (temp == flag) {
+                            finalClassAccessFlagList = tempList;
+                            return;
+                        } else if (temp > flag) {
+                            tempList.clear();
+                            break;
+                        }
+                        tempList.add(list.get(j));
+                    }
+                }
+            }
+        }
+        System.out.println("类访问控制权限：" + bytesToHex(accessFlagsBytes));
+
 
     }
 
     public static void parseConstant(byte[] bytes) {
         int constantPoolCountLen = 2;
-        byte[] constantPoolCountBytes = new byte[constantPoolCountLen];
-        getBytes(bytes, constantPoolCountBytes);
-        int constantPool = byteArrayToInt(constantPoolCountBytes);
-        System.out.println("常量池大小：" + byteArrayToInt(constantPoolCountBytes));
-        offset += constantPoolCountLen;
+        int constantPool = readByteArrayToInt(bytes, constantPoolCountLen);
+        System.out.println("常量池大小：" + constantPool);
 
-        for (int c = 0; c < constantPool-1; c++) {
+        for (int c = 0; c < constantPool - 1; c++) {
 
             ConstantType type = new ConstantType();
             List list = type.getAttrList();
@@ -213,18 +296,16 @@ public class Decompile {
                     Object value;
                     if (index == attrList.size() - 1) {
                         len *= length;
-                        byte[] nameBytes = new byte[len];
-                        for (int i = 0; i < nameBytes.length; i++) {
-                            nameBytes[i] = bytes[offset + i];
-                        }
+                        byte[] nameBytes = getBytes(bytes, len);
+//                        for (int i = 0; i < nameBytes.length; i++) {
+//                            nameBytes[i] = bytes[offset + i];
+//                        }
                         value = new String(nameBytes);
                     } else {
-                        byte[] nameBytes = new byte[len];
-                        getBytes(bytes, nameBytes);
+                        byte[] nameBytes = getBytes(bytes, len);
                         length = byteArrayToInt(nameBytes);
                         value = length;
                     }
-                    offset += len;
                     index++;
 
                     Map<String, Object> typeMap1 = new HashMap<>();
@@ -235,9 +316,7 @@ public class Decompile {
             } else {
                 for (Map map : attrList) {
                     int len = (int) map.get("len");
-                    byte[] nameBytes = new byte[len];
-                    getBytes(bytes, nameBytes);
-                    offset += len;
+                    byte[] nameBytes = getBytes(bytes, len);
                     int index = -1;
                     if (tag < 7) {
 
@@ -259,20 +338,23 @@ public class Decompile {
     public static void checkVersion(byte[] bytes) {
         int minorVersionLen = 2;
         int majorVersionLen = 2;
-        byte[] minorVersionBytes = new byte[minorVersionLen];
-        getBytes(bytes, minorVersionBytes);
+        byte[] minorVersionBytes = getBytes(bytes, minorVersionLen);
         System.out.println("次版本号：" + byteArrayToInt(minorVersionBytes));
-        offset += minorVersionLen;
-        byte[] majorVersionBytes = new byte[majorVersionLen];
-        getBytes(bytes, majorVersionBytes);
+        byte[] majorVersionBytes = getBytes(bytes, majorVersionLen);
         System.out.println("主版本号：" + JDK_VERSION.getOrDefault(byteArrayToInt(majorVersionBytes), "没有找到JDK版本"));
-        offset += majorVersionLen;
     }
 
-    private static void getBytes(byte[] bytes, byte[] minorVersionBytes) {
-        for (int i = 0; i < minorVersionBytes.length; i++) {
-            minorVersionBytes[i] = bytes[offset + i];
+    private static byte[] getBytes(byte[] bytes, int len) {
+        byte[] resultBytes = new byte[len];
+        for (int i = 0; i < len; i++) {
+            resultBytes[i] = bytes[offset + i];
         }
+        offset += len;
+        return resultBytes;
+    }
+
+    public static int readByteArrayToInt(byte[] bytes, int len) {
+        return byteArrayToInt(getBytes(bytes, len));
     }
 
     public static void checkMagic(byte[] bytes) {
