@@ -1,10 +1,10 @@
-package com.jvm_test.constant;
+package com.jvm_test.struct.field;
 
+import com.jvm_test.struct.attribute.AttributeInfo;
 import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Data
 public class FieldInfo {

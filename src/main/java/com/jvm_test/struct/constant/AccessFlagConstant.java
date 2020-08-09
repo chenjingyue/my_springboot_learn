@@ -1,4 +1,4 @@
-package com.jvm_test.constant;
+package com.jvm_test.struct.constant;
 
 public class AccessFlagConstant {
     public static final String ACC_PUBLIC = "ACC_PUBLIC";
@@ -25,7 +25,24 @@ public class AccessFlagConstant {
     public static final int ACCESS_FLAG = 2;
     public static final int COUNT = 2;
 
+    public static final int ATTRIBUTE_NAME_INDEX = 2;
+    public static final int ATTRIBUTE_LENGTH = 4;
+    public static final int ATTRIBUTE_COUNT = 2;
+
 
     public static final int FIELDS_COUNT_LEN = 2;
     public static final int METHODS_COUNT_LEN = 2;
+    public static final int MAX_STACK = 2;
+    public static final int MAX_LOCALS = 2;
+    public static final int CODE_LENGTH = 4;
+    public static final int EXCEPTION_TABLE_LENGTH = 2;
+
+
+    public static final int LINE_NUMBER_TABLE_LENGTH = 2;
+    public static final int LOCAL_VARIABLE_TABLE_LENGTH = 2;
+
+    public static final int START_PC = 2;
+    public static final int LINE_NUMBER = 2;
+
+
 }

@@ -1,4 +1,4 @@
-package com.jvm_test.constant;
+package com.jvm_test.struct.clazz;
 
 import lombok.Data;
 

@@ -1,5 +1,6 @@
-package com.jvm_test.constant;
+package com.jvm_test.struct.method;
 
+import com.jvm_test.struct.attribute.AttributeInfo;
 import lombok.Data;
 
 import java.util.ArrayList;

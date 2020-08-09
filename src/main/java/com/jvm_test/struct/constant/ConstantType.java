@@ -1,4 +1,4 @@
-package com.jvm_test.constant;
+package com.jvm_test.struct.constant;
 
 import lombok.Data;
 
@@ -11,7 +11,9 @@ public class ConstantType {
 
     private String name ;
 
-    private List<Map> attrList = new ArrayList<>();
+    private int type;
+
+    private List<ConstantAttribute> attrList = new ArrayList<>();
 
 
 }

@@ -1,7 +1,14 @@
 package com.jvm_test;
 
-import com.alibaba.fastjson.JSONObject;
-import com.jvm_test.constant.*;
+import com.jvm_test.factory.CodeAttributeFactory;
+import com.jvm_test.struct.attribute.AttributeInfo;
+import com.jvm_test.struct.attribute.CodeAttribute;
+import com.jvm_test.struct.clazz.ClassAccessFlag;
+import com.jvm_test.struct.constant.AccessFlagConstant;
+import com.jvm_test.struct.constant.ConstantAttribute;
+import com.jvm_test.struct.constant.ConstantType;
+import com.jvm_test.struct.field.FieldInfo;
+import com.jvm_test.struct.method.MethodInfo;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
@@ -16,7 +23,7 @@ public class Decompile {
 
     private static int offset = 0;
     private static Map<Integer, String> JDK_VERSION = new HashMap<>();
-    private static List<ConstantType> CONSTANT_POOL = new ArrayList<>();
+    public static List<ConstantType> CONSTANT_POOL = new ArrayList<>();
     private static Map<Integer, ConstantType> CONSTANT_POOL_TYPE = new HashMap<>();
     // 类访问权限
     private static Map<Integer, ClassAccessFlag> CLASS_ACCESS_FLAGS = new LinkedHashMap<>();
@@ -46,7 +53,7 @@ public class Decompile {
         CLASS_ACCESS_FLAGS.put(8192, new ClassAccessFlag(8192, AccessFlagConstant.ACC_ANNOTATION));
         CLASS_ACCESS_FLAGS.put(16384, new ClassAccessFlag(16384, AccessFlagConstant.ACC_ENUM, AccessFlagConstant.ENUM));
 
-
+        CONSTANT_POOL.add(null);
 //        CONSTANT_POOL.put(1,"CONSTANT_Utf8_info");
 //        CONSTANT_POOL.put(3,"CONSTANT_Integer_info");
 //        CONSTANT_POOL.put(4,"CONSTANT_Float_info");
@@ -64,72 +71,82 @@ public class Decompile {
 
         ConstantType methodrefInfo = new ConstantType();
         methodrefInfo.setName("CONSTANT_Methodref_info");
-        List attrList = methodrefInfo.getAttrList();
-        Map<String, Object> map = new HashMap<>();
-        map.put("name", "Class name");
-        map.put("len", 2);
-        attrList.add(map);
-        Map<String, Object> map1 = new HashMap<>();
-        map1.put("name", "Name and type");
-        map1.put("len", 2);
-        attrList.add(map1);
+        List<ConstantAttribute> attrList = methodrefInfo.getAttrList();
+        ConstantAttribute attribute = new ConstantAttribute();
+        attribute.setName("Class name");
+        attribute.setType(1);
+        attribute.setLen(2);
+        attrList.add(attribute);
+        attribute = new ConstantAttribute();
+        attribute.setName("Name and type");
+        attribute.setType(1);
+        attribute.setLen(2);
+        attrList.add(attribute);
         CONSTANT_POOL_TYPE.put(10, methodrefInfo);
 
         ConstantType Utf8Info = new ConstantType();
         Utf8Info.setName("CONSTANT_Utf8_info");
         attrList = Utf8Info.getAttrList();
-        Map<String, Object> map2 = new HashMap<>();
-        map2.put("name", "Length of byte array");
-        map2.put("len", 2);
-        attrList.add(map2);
-        Map<String, Object> map3 = new HashMap<>();
-        map3.put("name", "String");
-        map3.put("len", 1);
-        attrList.add(map3);
+        attribute = new ConstantAttribute();
+        attribute.setName("Length of byte array");
+        attribute.setLen(2);
+        attrList.add(attribute);
+        attribute = new ConstantAttribute();
+        attribute.setName("String");
+        attribute.setLen(1);
+        attrList.add(attribute);
         CONSTANT_POOL_TYPE.put(1, Utf8Info);
 
         ConstantType fieldrefInfo = new ConstantType();
         fieldrefInfo.setName("CONSTANT_Fieldref_info");
         attrList = fieldrefInfo.getAttrList();
-        Map<String, Object> fieldrefMap1 = new HashMap<>();
-        fieldrefMap1.put("name", "Class name");
-        fieldrefMap1.put("len", 2);
-        attrList.add(fieldrefMap1);
-        Map<String, Object> fieldrefMap2 = new HashMap<>();
-        fieldrefMap2.put("name", "Name and type");
-        fieldrefMap2.put("len", 2);
-        attrList.add(fieldrefMap2);
+        attribute = new ConstantAttribute();
+        attribute.setName("Class name");
+        attribute.setType(1);
+        attribute.setLen(2);
+        attrList.add(attribute);
+        attribute = new ConstantAttribute();
+        attribute.setName("Name and type");
+        attribute.setType(1);
+        attribute.setLen(2);
+        attrList.add(attribute);
         CONSTANT_POOL_TYPE.put(9, fieldrefInfo);
 
         ConstantType classInfo = new ConstantType();
         classInfo.setName("CONSTANT_Class_info");
         attrList = classInfo.getAttrList();
-        Map<String, Object> classMap1 = new HashMap<>();
-        classMap1.put("name", "Class name");
-        classMap1.put("len", 2);
-        attrList.add(classMap1);
+        attribute = new ConstantAttribute();
+        attribute.setName("Class name");
+        attribute.setType(1);
+        attribute.setLen(2);
+        ;
+        attrList.add(attribute);
         CONSTANT_POOL_TYPE.put(7, classInfo);
 
         ConstantType nameAndTypeInfo = new ConstantType();
         nameAndTypeInfo.setName("CONSTANT_NameAndType_info");
         attrList = nameAndTypeInfo.getAttrList();
-        Map<String, Object> nameAndTypeMap1 = new HashMap<>();
-        nameAndTypeMap1.put("name", "Name");
-        nameAndTypeMap1.put("len", 2);
-        attrList.add(nameAndTypeMap1);
-        Map<String, Object> nameAndTypeMap2 = new HashMap<>();
-        nameAndTypeMap2.put("name", "Descriptor");
-        nameAndTypeMap2.put("len", 2);
-        attrList.add(nameAndTypeMap2);
+        attribute = new ConstantAttribute();
+        attribute.setName("Name");
+        attribute.setType(1);
+        attribute.setLen(2);
+        ;
+        attrList.add(attribute);
+        attribute = new ConstantAttribute();
+        attribute.setName("Descriptor");
+        attribute.setType(1);
+        attribute.setLen(2);
+        attrList.add(attribute);
         CONSTANT_POOL_TYPE.put(12, nameAndTypeInfo);
 
         ConstantType stringInfo = new ConstantType();
         stringInfo.setName("CONSTANT_String_info");
         attrList = stringInfo.getAttrList();
-        Map<String, Object> stringMap1 = new HashMap<>();
-        stringMap1.put("name", "String");
-        stringMap1.put("len", 2);
-        attrList.add(stringMap1);
+        attribute = new ConstantAttribute();
+        attribute.setName("String");
+        attribute.setType(1);
+        attribute.setLen(2);
+        attrList.add(attribute);
         CONSTANT_POOL_TYPE.put(8, stringInfo);
     }
 
@@ -154,6 +171,8 @@ public class Decompile {
             parseInterface(bytes);
             // 成员属性
             parseFields(bytes);
+            System.out.println("offset: " + offset);
+            parseMethods(bytes);
 
 
         } catch (IOException e) {
@@ -162,12 +181,42 @@ public class Decompile {
 
     }
 
-    public static  void parseMethods(byte[] bytes) {
+    public static void parseMethods(byte[] bytes) {
         int count = readByteArrayToInt(bytes, AccessFlagConstant.METHODS_COUNT_LEN);
         List<MethodInfo> list = new ArrayList<>();
-        if(0 < count) {
+        if (0 < count) {
+            for (int i = 0; i < count; i++) {
+                MethodInfo methodInfo = new MethodInfo();
+                int accessFlags = readByteArrayToInt(bytes, AccessFlagConstant.ACCESS_FLAG);
+                methodInfo.setAccessFlags(accessFlags);
+                int nameIndex = readByteArrayToInt(bytes, AccessFlagConstant.INDEX);
+                methodInfo.setNameIndex(nameIndex);
+                int descriptorIndex = readByteArrayToInt(bytes, AccessFlagConstant.INDEX);
+                methodInfo.setDescriptorIndex(descriptorIndex);
+                int attributeCount = readByteArrayToInt(bytes, AccessFlagConstant.COUNT);
+                methodInfo.setAttributesCount(attributeCount);
+                List<AttributeInfo> attributeInfoList = methodInfo.getAttributeInfoList();
+                if (attributeCount > 0) {
+                    // TODO: 2020/8/8   AttributeInfo 未进行解析完
+                    int attributeNameIndex = readByteArrayToInt(bytes, AccessFlagConstant.ATTRIBUTE_NAME_INDEX);
+                    int attributeLength = readByteArrayToInt(bytes, AccessFlagConstant.ATTRIBUTE_LENGTH);
+                    byte[] attributeBytes = getBytes(bytes, attributeLength);
+                    CodeAttributeFactory codeAttributeFactory = new CodeAttributeFactory(attributeBytes);
+                    CodeAttribute codeAttribute = codeAttributeFactory.getCodeAttribute();
+                    codeAttribute.setAttributeNameIndex(attributeNameIndex);
+                    codeAttribute.setAttributeLength(attributeLength);
+                    attributeInfoList.add(codeAttribute);
 
+                }
+                list.add(methodInfo);
+            }
         }
+
+    }
+
+    public void parseCodeAttribute(byte[] bytes) {
+
+
     }
 
     public static void parseFields(byte[] bytes) {
@@ -186,12 +235,12 @@ public class Decompile {
                 fieldInfo.setAttributesCount(attributeCount);
                 if (attributeCount > 0) {
                     List<AttributeInfo> attributeInfoList = fieldInfo.getAttributeInfoList();
+                    // TODO: 2020/8/8   AttributeInfo 未进行解析
                 }
                 list.add(fieldInfo);
             }
         }
-        System.out.println("成员属性个数： "+count);
-
+        System.out.println("成员属性个数： " + count);
     }
 
     public static void parseInterface(byte[] bytes) {
@@ -205,28 +254,22 @@ public class Decompile {
                 int index = readByteArrayToInt(bytes, interfaceIndexLen);
             }
         }
-        System.out.println("接口个数： "+count);
+        System.out.println("接口个数： " + count);
     }
 
 
     public static void thisAndSupperClass(byte[] bytes) {
         int thisClassLen = 2;
-//        byte[] thisClassBytes = new byte[thisClassLen];
-//        getBytes(bytes, thisClassBytes);
-//        offset += thisClassLen;
         int thisClassIndex = readByteArrayToInt(bytes, thisClassLen);
 
         int supperClassLen = 2;
-//        byte[] supperClassBytes = new byte[supperClassLen];
-//        getBytes(bytes, supperClassBytes);
-//        offset += supperClassLen;
         int supperClassIndex = readByteArrayToInt(bytes, supperClassLen);
         System.out.println("类名间接引用地址： " + thisClassIndex + "； 父类间接引用地址" + supperClassIndex);
     }
 
     public static void accessFlags(byte[] bytes) {
         int accessFlagsLen = 2;
-        byte[] accessFlagsBytes =getBytes(bytes, accessFlagsLen);
+        byte[] accessFlagsBytes = getBytes(bytes, accessFlagsLen);
         int flag = byteArrayToInt(accessFlagsBytes);
         List<ClassAccessFlag> list = new ArrayList<>();
         ClassAccessFlag determine = null;
@@ -268,6 +311,7 @@ public class Decompile {
                 }
             }
         }
+        // TODO: 2020/8/8 类访问权限未解析完
         System.out.println("类访问控制权限：" + bytesToHex(accessFlagsBytes));
 
 
@@ -281,18 +325,18 @@ public class Decompile {
         for (int c = 0; c < constantPool - 1; c++) {
 
             ConstantType type = new ConstantType();
-            List list = type.getAttrList();
+            List<ConstantAttribute> list = type.getAttrList();
 
             int tag = bytes[offset] & 0xFF;
             offset += 1;
             ConstantType constantType = CONSTANT_POOL_TYPE.get(tag);
             type.setName(constantType.getName());
-            List<Map> attrList = constantType.getAttrList();
+            List<ConstantAttribute> attrList = constantType.getAttrList();
             if (1 == tag) {
                 int index = 0;
                 int length = 1;
-                for (Map map : attrList) {
-                    int len = (int) map.get("len");
+                for (ConstantAttribute attribute : attrList) {
+                    int len = attribute.getLen();
                     Object value;
                     if (index == attrList.size() - 1) {
                         len *= length;
@@ -307,15 +351,14 @@ public class Decompile {
                         value = length;
                     }
                     index++;
-
-                    Map<String, Object> typeMap1 = new HashMap<>();
-                    typeMap1.put("name", map.get("name"));
-                    typeMap1.put("value", value);
-                    list.add(typeMap1);
+                    ConstantAttribute att = new ConstantAttribute();
+                    att.setName(attribute.getName());
+                    att.setValue(value);
+                    list.add(att);
                 }
             } else {
-                for (Map map : attrList) {
-                    int len = (int) map.get("len");
+                for (ConstantAttribute attribute : attrList) {
+                    int len = attribute.getLen();
                     byte[] nameBytes = getBytes(bytes, len);
                     int index = -1;
                     if (tag < 7) {
@@ -323,10 +366,10 @@ public class Decompile {
                     } else {
                         index = byteArrayToInt(nameBytes);
                     }
-                    Map<String, Object> typeMap1 = new HashMap<>();
-                    typeMap1.put("name", map.get("name"));
-                    typeMap1.put("index", index);
-                    list.add(typeMap1);
+                    ConstantAttribute att = new ConstantAttribute();
+                    att.setName(attribute.getName());
+                    att.setValue(index);
+                    list.add(att);
                 }
             }
             CONSTANT_POOL.add(type);

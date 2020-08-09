@@ -1,6 +1,6 @@
-package com.jvm_test.constant;
+package com.jvm_test.struct.constant;
 
-public class ConstantMethodrefInfo {
+public class ConstantClassInfo {
 
     private String name;
 
