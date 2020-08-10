@@ -1,8 +1,9 @@
 package com.jvm_test;
 
-import com.jvm_test.factory.CodeAttributeFactory;
+import com.jvm_test.factory.AttributeInfoFactory;
+import com.jvm_test.factory.AttributeInfoFactoryBuild;
 import com.jvm_test.struct.attribute.AttributeInfo;
-import com.jvm_test.struct.attribute.CodeAttribute;
+import com.jvm_test.struct.attribute.MethodParameters;
 import com.jvm_test.struct.clazz.ClassAccessFlag;
 import com.jvm_test.struct.constant.AccessFlagConstant;
 import com.jvm_test.struct.constant.ConstantAttribute;
@@ -152,7 +153,7 @@ public class Decompile {
 
 
     public static void main(String[] args) {
-        String classFilePath = "E:\\chenjingyue\\my_springboot_learn\\target\\classes\\com\\jvm_test\\Hello.class";
+        String classFilePath = "F:\\chenyu\\my_springboot_learn\\target\\classes\\com\\jvm_test\\Hello.class";
         File file = new File(classFilePath);
         try {
             byte[] bytes = FileUtils.readFileToByteArray(file);
@@ -169,9 +170,9 @@ public class Decompile {
             thisAndSupperClass(bytes);
             // 接口
             parseInterface(bytes);
-            // 成员属性
+            // 解析成员属性
             parseFields(bytes);
-            System.out.println("offset: " + offset);
+            // 解析方法
             parseMethods(bytes);
 
 
@@ -198,15 +199,10 @@ public class Decompile {
                 List<AttributeInfo> attributeInfoList = methodInfo.getAttributeInfoList();
                 if (attributeCount > 0) {
                     // TODO: 2020/8/8   AttributeInfo 未进行解析完
-                    int attributeNameIndex = readByteArrayToInt(bytes, AccessFlagConstant.ATTRIBUTE_NAME_INDEX);
-                    int attributeLength = readByteArrayToInt(bytes, AccessFlagConstant.ATTRIBUTE_LENGTH);
-                    byte[] attributeBytes = getBytes(bytes, attributeLength);
-                    CodeAttributeFactory codeAttributeFactory = new CodeAttributeFactory(attributeBytes);
-                    CodeAttribute codeAttribute = codeAttributeFactory.getCodeAttribute();
-                    codeAttribute.setAttributeNameIndex(attributeNameIndex);
-                    codeAttribute.setAttributeLength(attributeLength);
-                    attributeInfoList.add(codeAttribute);
-
+                    for (int j = 0; j < attributeCount; j++) {
+                        AttributeInfo attributeInfo = getAttributeInfo(bytes);
+                        attributeInfoList.add(attributeInfo);
+                    }
                 }
                 list.add(methodInfo);
             }
@@ -214,9 +210,11 @@ public class Decompile {
 
     }
 
-    public void parseCodeAttribute(byte[] bytes) {
+
+    public static MethodParameters getMethodParameters(byte[] bytes) {
 
 
+        return null;
     }
 
     public static void parseFields(byte[] bytes) {
@@ -233,14 +231,36 @@ public class Decompile {
                 fieldInfo.setDescriptorIndex(descriptorIndex);
                 int attributeCount = readByteArrayToInt(bytes, AccessFlagConstant.COUNT);
                 fieldInfo.setAttributesCount(attributeCount);
-                if (attributeCount > 0) {
                     List<AttributeInfo> attributeInfoList = fieldInfo.getAttributeInfoList();
-                    // TODO: 2020/8/8   AttributeInfo 未进行解析
+                if (attributeCount > 0) {
+                    for (int j = 0; j < attributeCount; j++) {
+                        AttributeInfo attributeInfo = getAttributeInfo(bytes);
+
+                        attributeInfoList.add(attributeInfo);
+                    }
                 }
                 list.add(fieldInfo);
             }
         }
         System.out.println("成员属性个数： " + count);
+    }
+
+    private static AttributeInfo getAttributeInfo(byte[] bytes) {
+        int attributeNameIndex = readByteArrayToInt(bytes, AccessFlagConstant.ATTRIBUTE_NAME_INDEX);
+        int attributeLength = readByteArrayToInt(bytes, AccessFlagConstant.ATTRIBUTE_LENGTH);
+        byte[] attributeBytes = getBytes(bytes, attributeLength);
+
+        // 从常量池中找到 index 指向的内容
+        ConstantType constantType = Decompile.CONSTANT_POOL.get(attributeNameIndex);
+        ConstantAttribute attribute = constantType.getAttrList().get(1);
+        String value = (String) attribute.getValue();
+
+        // TODO: 2020/8/8   AttributeInfo 未进行解析
+        AttributeInfoFactory attributeInfoFactory = AttributeInfoFactoryBuild.getAttributeInfoFactory(attributeBytes, value);
+        AttributeInfo attributeInfoInstance = attributeInfoFactory.getAttributeInfoInstance();
+        attributeInfoInstance.setAttributeNameIndex(attributeNameIndex);
+        attributeInfoInstance.setAttributeLength(attributeLength);
+        return attributeInfoInstance;
     }
 
     public static void parseInterface(byte[] bytes) {

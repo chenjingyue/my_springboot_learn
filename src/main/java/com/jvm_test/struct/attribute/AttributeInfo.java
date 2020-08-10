@@ -8,4 +8,8 @@ public class AttributeInfo {
     private int attributeNameIndex;
     private int attributeLength;
 
+    public void getInstance() {
+
+    }
+
 }

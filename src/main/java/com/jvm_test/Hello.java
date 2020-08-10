@@ -6,11 +6,15 @@ import org.springframework.context.ApplicationContextAware;
 
 import java.io.Serializable;
 
-public final class Hello   implements Serializable,ApplicationContextAware {
+public final class Hello implements Serializable, ApplicationContextAware {
 
     public static int a = 4;
 
-    public String str;
+    public final static String str = "aaa";
+
+    public Hello() {
+    }
+
 
     public static void main(String[] args) {
 
@@ -20,8 +24,12 @@ public final class Hello   implements Serializable,ApplicationContextAware {
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 
     }
-    
-    public  static class A{
+
+    public void test() throws BeansException, Exception {
+
+    }
+
+    public static class A {
 
     }
 }

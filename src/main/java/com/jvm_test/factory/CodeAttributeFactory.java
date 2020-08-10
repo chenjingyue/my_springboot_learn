@@ -1,25 +1,32 @@
 package com.jvm_test.factory;
 
 import com.jvm_test.Decompile;
-import com.jvm_test.struct.attribute.CodeAttribute;
-import com.jvm_test.struct.attribute.code.CodeAttributeTable;
-import com.jvm_test.struct.attribute.code.LineNumberTable;
-import com.jvm_test.struct.attribute.code.LineNumberTableInfo;
-import com.jvm_test.struct.attribute.code.LocalVariableTable;
+import com.jvm_test.struct.attribute.AttributeInfo;
+import com.jvm_test.struct.attribute.code.CodeAttribute;
+import com.jvm_test.struct.attribute.code.*;
 import com.jvm_test.struct.constant.AccessFlagConstant;
 import com.jvm_test.struct.constant.ConstantAttribute;
 import com.jvm_test.struct.constant.ConstantType;
+import com.jvm_test.utils.ByteUtil;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class CodeAttributeFactory {
+public class CodeAttributeFactory implements AttributeInfoFactory {
 
     private byte[] bytes;
     private int offset;
 
     public CodeAttributeFactory(byte[] bytes) {
         this.bytes = bytes;
+    }
+
+
+
+    @Override
+    public AttributeInfo getAttributeInfoInstance() {
+        return getCodeAttribute();
     }
 
     public CodeAttribute getCodeAttribute() {
@@ -44,78 +51,77 @@ public class CodeAttributeFactory {
             for (int i = 0; i < attributeCount; i++) {
                 int codeAttrNameIndex = readByteArrayToInt(bytes, AccessFlagConstant.ATTRIBUTE_NAME_INDEX);
                 int codeAttrLength = readByteArrayToInt(bytes, AccessFlagConstant.ATTRIBUTE_LENGTH);
-                byte[] lineNumberTableBytes = getBytes(this.bytes, codeAttrLength);
+                byte[] codeAttrInfoBytes = getBytes(this.bytes, codeAttrLength);
                 // 判断是否LineNumberTable LocalVariableTable属性
                 ConstantType constantType = Decompile.CONSTANT_POOL.get(codeAttrNameIndex);
                 ConstantAttribute attribute = constantType.getAttrList().get(1);
-
-                if (StringUtils.equalsIgnoreCase("LineNumberTable", (String) attribute.getValue())) {
-                    LineNumberTable lineNumberTable = new LineNumberTable();
-                    lineNumberTable.setAttributeNameIndex(codeAttrNameIndex);
-                    lineNumberTable.setAttributeLength(codeAttrLength);
-                    lineNumberTable.setType(1);
-                    List<LineNumberTableInfo> lineNumberInfo = lineNumberTable.getLineNumberInfo();
-
-                    int lineNumberTableLength = readByteArrayToIntFromOffset(lineNumberTableBytes, 0,
-                            AccessFlagConstant.LINE_NUMBER_TABLE_LENGTH);
-                    int offsetTemp = AccessFlagConstant.LINE_NUMBER_TABLE_LENGTH;
-                    lineNumberTable.setLineNumberTableLength(lineNumberTableLength);
-
-                    for (int j = 0; j < lineNumberTableLength; j++) {
-                        int startPc = readByteArrayToIntFromOffset(lineNumberTableBytes, offsetTemp, AccessFlagConstant.START_PC);
-                        offsetTemp += AccessFlagConstant.START_PC;
-                        int lineNumber = readByteArrayToIntFromOffset(lineNumberTableBytes, offsetTemp, AccessFlagConstant.LINE_NUMBER);
-                        offsetTemp += AccessFlagConstant.LINE_NUMBER;
-                        LineNumberTableInfo lineNumberTableInfo = new LineNumberTableInfo(startPc, lineNumber);
-                        lineNumberInfo.add(lineNumberTableInfo);
-                    }
-                    codeAttributeList.add(lineNumberTable);
-
-                } else if (StringUtils.equalsIgnoreCase("LocalVariableTable", (String) attribute.getValue())) {
-                    LocalVariableTable localVariableTable = new LocalVariableTable();
-                    localVariableTable.setType(2);
-                    int localVariableTableLength = readByteArrayToIntFromOffset(lineNumberTableBytes, 0,
-                            AccessFlagConstant.LOCAL_VARIABLE_TABLE_LENGTH);
-                    int offsetTemp = AccessFlagConstant.LOCAL_VARIABLE_TABLE_LENGTH;
-                    localVariableTable.setLocalVariableTableLength(localVariableTableLength);
-
-                    for (int j = 0; j < localVariableTableLength; j++) {
-//                    int startPc = readByteArrayToIntFromOffset(lineNumberTableBytes, offsetTemp, AccessFlagConstant.START_PC);
-//                    offsetTemp += AccessFlagConstant.START_PC;
-//                    int lineNumber = readByteArrayToIntFromOffset(lineNumberTableBytes, offsetTemp, AccessFlagConstant.LINE_NUMBER);
-//                    offsetTemp += AccessFlagConstant.LINE_NUMBER;
-//                    LineNumberTableInfo lineNumberTableInfo = new LineNumberTableInfo(startPc, lineNumber);
-//                    lineNumberInfo.add(lineNumberTableInfo);
-                    }
-
-                    codeAttributeList.add(localVariableTable);
+                String value = (String) attribute.getValue();
+                CodeAttributeTable codeAttributeTable = null;
+                if (StringUtils.equalsIgnoreCase("LineNumberTable", value)) {
+                    codeAttributeTable = getLineNumberTable(codeAttrInfoBytes);
+                } else if (StringUtils.equalsIgnoreCase("LocalVariableTable", value)) {
+                    codeAttributeTable = getLocalVariableTable(codeAttrInfoBytes);
                 }
-
-//
-//            for (int i = 0; i < lineNumberTableLength; i++) {
-//                if (StringUtils.equalsIgnoreCase("LineNumberTable", (String) attribute.getValue())) {
-//                    LineNumberTable lineNumberTable = new LineNumberTable();
-//                    lineNumberTable.setLineNumberTableLength(lineNumberTableLength);
-//
-//                    int startPc = readByteArrayToIntFromOffset(lineNumberTableBytes, offsetTemp, AccessFlagConstant.START_PC);
-//                    offsetTemp += AccessFlagConstant.START_PC;
-//                    int lineNumber = readByteArrayToIntFromOffset(lineNumberTableBytes, offsetTemp, AccessFlagConstant.LINE_NUMBER);
-//                    offsetTemp += AccessFlagConstant.LINE_NUMBER;
-//                    LineNumberTableInfo lineNumberTableInfo = new LineNumberTableInfo(startPc, lineNumber);
-//
-//                    lineNumberTable.setLineNumberInfo(lineNumberTable);
-//                    codeAttributeTable = lineNumberTable;
-//
-//                    codeAttributeList.add(codeAttributeTable);
-//                }
-//            }
-
-
+                if (null != codeAttributeTable) {
+                    codeAttributeTable.setAttributeNameIndex(codeAttrNameIndex);
+                    codeAttributeTable.setAttributeLength(codeAttrLength);
+                    codeAttributeList.add(codeAttributeTable);
+                }
             }
         }
-
-
         return code;
+    }
+
+    private LocalVariableTable getLocalVariableTable(byte[] codeAttrInfoBytes) {
+        LocalVariableTable localVariableTable = new LocalVariableTable();
+        List<LocalVariableTableInfo> localVariableTableInfoList = localVariableTable.getLocalVariableTableInfo();
+        if (null == localVariableTableInfoList) {
+            localVariableTableInfoList = new ArrayList<>();
+            localVariableTable.setLocalVariableTableInfo(localVariableTableInfoList);
+        }
+        localVariableTable.setType(2);
+        int localVariableTableLength = ByteUtil.readByteArrayToIntFromOffset(codeAttrInfoBytes, 0,
+                AccessFlagConstant.LOCAL_VARIABLE_TABLE_LENGTH);
+        int offsetTemp = AccessFlagConstant.LOCAL_VARIABLE_TABLE_LENGTH;
+        localVariableTable.setLocalVariableTableLength(localVariableTableLength);
+
+        for (int j = 0; j < localVariableTableLength; j++) {
+            int startPc = ByteUtil.readByteArrayToIntFromOffset(codeAttrInfoBytes, offsetTemp, AccessFlagConstant.START_PC);
+            offsetTemp += AccessFlagConstant.START_PC;
+            int length = ByteUtil.readByteArrayToIntFromOffset(codeAttrInfoBytes, offsetTemp, AccessFlagConstant.LENGTH);
+            offsetTemp += AccessFlagConstant.LENGTH;
+            int nameIndex = ByteUtil.readByteArrayToIntFromOffset(codeAttrInfoBytes, offsetTemp, AccessFlagConstant.NAME_INDEX);
+            offsetTemp += AccessFlagConstant.NAME_INDEX;
+            int descriptorIndex = ByteUtil.readByteArrayToIntFromOffset(codeAttrInfoBytes, offsetTemp, AccessFlagConstant.DESCRIPTOR_INDEX);
+            offsetTemp += AccessFlagConstant.DESCRIPTOR_INDEX;
+            int index = ByteUtil.readByteArrayToIntFromOffset(codeAttrInfoBytes, offsetTemp, AccessFlagConstant.INDEX);
+            offsetTemp += AccessFlagConstant.INDEX;
+
+            LocalVariableTableInfo localVariableTableInfo = new LocalVariableTableInfo(startPc, length, nameIndex, descriptorIndex, index);
+            localVariableTableInfoList.add(localVariableTableInfo);
+        }
+        return localVariableTable;
+    }
+
+    private LineNumberTable getLineNumberTable(byte[] codeAttrInfoBytes) {
+        LineNumberTable lineNumberTable = new LineNumberTable();
+        List<LineNumberTableInfo> lineNumberInfo = lineNumberTable.getLineNumberInfo();
+
+        lineNumberTable.setType(1);
+        int lineNumberTableLength = ByteUtil.readByteArrayToIntFromOffset(codeAttrInfoBytes, 0,
+                AccessFlagConstant.LINE_NUMBER_TABLE_LENGTH);
+        int offsetTemp = AccessFlagConstant.LINE_NUMBER_TABLE_LENGTH;
+        lineNumberTable.setLineNumberTableLength(lineNumberTableLength);
+
+        for (int j = 0; j < lineNumberTableLength; j++) {
+            int startPc = ByteUtil.readByteArrayToIntFromOffset(codeAttrInfoBytes, offsetTemp, AccessFlagConstant.START_PC);
+            offsetTemp += AccessFlagConstant.START_PC;
+            int lineNumber = ByteUtil.readByteArrayToIntFromOffset(codeAttrInfoBytes, offsetTemp, AccessFlagConstant.LINE_NUMBER);
+            offsetTemp += AccessFlagConstant.LINE_NUMBER;
+            LineNumberTableInfo lineNumberTableInfo = new LineNumberTableInfo(startPc, lineNumber);
+            lineNumberInfo.add(lineNumberTableInfo);
+        }
+        return lineNumberTable;
     }
 
     private byte[] getBytes(byte[] bytes, int len) {
@@ -130,37 +136,11 @@ public class CodeAttributeFactory {
         return resultBytes;
     }
 
-    private byte[] getBytesFromOffset(byte[] bytes, int offset, int len) {
-        if (len <= 0) {
-            return new byte[0];
-        }
-        if ((offset + len) > bytes.length) {
-            return new byte[0];
-        }
-        byte[] resultBytes = new byte[len];
-        for (int i = offset; i < len + offset; i++) {
-            resultBytes[i - offset] = bytes[i];
-        }
-        return resultBytes;
-    }
 
 
-    public int byteArrayToInt(byte[] bytes) {
-        int value = 0;
-        int len = bytes.length;
-        // 由高位到低位
-        for (int i = 0; i < len; i++) {
-            int shift = (len - 1 - i) * 8;
-            value += (bytes[i] & 0x000000FF) << shift;// 往高位游
-        }
-        return value;
-    }
 
     public int readByteArrayToInt(byte[] bytes, int len) {
-        return byteArrayToInt(getBytes(bytes, len));
+        return ByteUtil.byteArrayToInt(getBytes(bytes, len));
     }
 
-    public int readByteArrayToIntFromOffset(byte[] bytes, int offset, int len) {
-        return byteArrayToInt(getBytesFromOffset(bytes, offset, len));
-    }
 }

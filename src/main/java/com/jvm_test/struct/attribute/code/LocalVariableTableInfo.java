@@ -11,4 +11,11 @@ public class LocalVariableTableInfo {
     private int descriptorIndex;
     private int index;
 
+    public LocalVariableTableInfo(int startPc, int length, int nameIndex, int descriptorIndex, int index) {
+        this.startPc = startPc;
+        this.length = length;
+        this.nameIndex = nameIndex;
+        this.descriptorIndex = descriptorIndex;
+        this.index = index;
+    }
 }

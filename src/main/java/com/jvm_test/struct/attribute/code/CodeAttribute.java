@@ -1,5 +1,6 @@
-package com.jvm_test.struct.attribute;
+package com.jvm_test.struct.attribute.code;
 
+import com.jvm_test.struct.attribute.AttributeInfo;
 import com.jvm_test.struct.attribute.code.CodeAttributeTable;
 import lombok.Data;
 
