@@ -54,8 +54,17 @@ public class AccessFlagConstant {
     public static final int EXCEPTION_INDEX_TABLE = 2;
 
 
-    public static final int PARAMETERS_COUNT = 2;
+    public static final int PARAMETERS_COUNT = 1;
     public static final int ACCESS_FLAGS = 2;
+
+
+    public static final int SOURCEFILE_INDEX = 2;
+
+    public static final int NUMBER_OF_CLASSES = 2;
+    public static final int INNER_CLASS_INFO_INDEX = 2;
+    public static final int OUTER_CLASS_INFO_INDEX = 2;
+    public static final int INNER_NAME_INDEX = 2;
+    public static final int INNER_CLASS_ACCESS_FLAGS = 2;
 
 
 }

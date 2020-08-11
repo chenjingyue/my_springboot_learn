@@ -13,6 +13,7 @@ public class MethodParameters extends AttributeInfo {
     private List<Parameters> parameters = new ArrayList<>();
 
 
+    @Data
     public static class Parameters {
         private int nameIndex;
         private int accessFlags;

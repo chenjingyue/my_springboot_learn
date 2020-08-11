@@ -1,5 +1,10 @@
 package com.jvm_test.struct.attribute;
 
+import lombok.Data;
+
+import java.util.ArrayList;
+import java.util.List;
+@Data
 public class Exceptions extends AttributeInfo {
 
     /**
@@ -10,10 +15,7 @@ public class Exceptions extends AttributeInfo {
     /**
      * 指向常量池中 CONSTANT_Class_info 型常量的索引，代表了该异常类型
      */
-    private int exceptionIndexTable;
+    private List<Integer> exceptionIndexTable = new ArrayList<>();
 
-    public Exceptions(int numberOfExceptions, int exceptionIndexTable) {
-        this.numberOfExceptions = numberOfExceptions;
-        this.exceptionIndexTable = exceptionIndexTable;
-    }
+
 }

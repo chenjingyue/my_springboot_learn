@@ -23,15 +23,19 @@ public class MethodParametersFactory implements AttributeInfoFactory {
     }
 
     public MethodParameters getMethodParameters() {
+        int offset = 0;
         MethodParameters methodParameters = new MethodParameters();
         List<MethodParameters.Parameters> parametersList = methodParameters.getParameters();
 
-        int parametersCount = ByteUtil.readByteArrayToIntFromOffset(bytes, AccessFlagConstant.PARAMETERS_COUNT);
+        int parametersCount = ByteUtil.readByteArrayToIntFromOffset(bytes,offset, AccessFlagConstant.PARAMETERS_COUNT);
+        offset += AccessFlagConstant.PARAMETERS_COUNT;
         methodParameters.setParametersCount(parametersCount);
         if (parametersCount > 0) {
             for (int i = 0; i < parametersCount; i++) {
-                int nameIndex = ByteUtil.readByteArrayToIntFromOffset(bytes, AccessFlagConstant.NAME_INDEX);
-                int accessFlags = ByteUtil.readByteArrayToIntFromOffset(bytes, AccessFlagConstant.ACCESS_FLAGS);
+                int nameIndex = ByteUtil.readByteArrayToIntFromOffset(bytes,offset, AccessFlagConstant.NAME_INDEX);
+                offset += AccessFlagConstant.NAME_INDEX;
+                int accessFlags = ByteUtil.readByteArrayToIntFromOffset(bytes,offset, AccessFlagConstant.ACCESS_FLAGS);
+                offset += AccessFlagConstant.ACCESS_FLAGS;
                 MethodParameters.Parameters parameters = new MethodParameters.Parameters(nameIndex, accessFlags);
                 parametersList.add(parameters);
             }

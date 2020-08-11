@@ -1,9 +1,9 @@
 package com.jvm_test;
 
+import com.alibaba.fastjson.JSONObject;
 import com.jvm_test.factory.AttributeInfoFactory;
 import com.jvm_test.factory.AttributeInfoFactoryBuild;
 import com.jvm_test.struct.attribute.AttributeInfo;
-import com.jvm_test.struct.attribute.MethodParameters;
 import com.jvm_test.struct.clazz.ClassAccessFlag;
 import com.jvm_test.struct.constant.AccessFlagConstant;
 import com.jvm_test.struct.constant.ConstantAttribute;
@@ -153,6 +153,7 @@ public class Decompile {
 
 
     public static void main(String[] args) {
+        long start = System.currentTimeMillis();
         String classFilePath = "F:\\chenyu\\my_springboot_learn\\target\\classes\\com\\jvm_test\\Hello.class";
         File file = new File(classFilePath);
         try {
@@ -163,7 +164,6 @@ public class Decompile {
             checkVersion(bytes);
             // 解析常量池
             parseConstant(bytes);
-//            System.out.println(JSONObject.toJSONString(CONSTANT_POOL));
             // 类访问控制权限
             accessFlags(bytes);
             // 类名
@@ -174,12 +174,28 @@ public class Decompile {
             parseFields(bytes);
             // 解析方法
             parseMethods(bytes);
+            // 解析类属性
+            parseClassAttributes(bytes);
 
 
+            long end = System.currentTimeMillis();
+            System.out.println("使用时间(ms)：" + (end - start) + "(ms)");
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
+    public static void parseClassAttributes(byte[] bytes) {
+        List<AttributeInfo> attributeInfoList = new ArrayList<>();
+        int attributeCount = readByteArrayToInt(bytes, AccessFlagConstant.ATTRIBUTE_COUNT);
+        if (attributeCount > 0) {
+            for (int i = 0; i < attributeCount; i++) {
+                AttributeInfo attributeInfo = getAttributeInfo(bytes);
+                attributeInfoList.add(attributeInfo);
+            }
+        }
+        System.out.println("类属性数量： " + attributeInfoList.size());
+        System.out.println(JSONObject.toJSONString(attributeInfoList));
     }
 
     public static void parseMethods(byte[] bytes) {
@@ -198,7 +214,6 @@ public class Decompile {
                 methodInfo.setAttributesCount(attributeCount);
                 List<AttributeInfo> attributeInfoList = methodInfo.getAttributeInfoList();
                 if (attributeCount > 0) {
-                    // TODO: 2020/8/8   AttributeInfo 未进行解析完
                     for (int j = 0; j < attributeCount; j++) {
                         AttributeInfo attributeInfo = getAttributeInfo(bytes);
                         attributeInfoList.add(attributeInfo);
@@ -208,14 +223,10 @@ public class Decompile {
             }
         }
 
+        System.out.println("方法数量： " + list.size());
+        System.out.println(JSONObject.toJSONString(list));
     }
 
-
-    public static MethodParameters getMethodParameters(byte[] bytes) {
-
-
-        return null;
-    }
 
     public static void parseFields(byte[] bytes) {
         int count = readByteArrayToInt(bytes, AccessFlagConstant.FIELDS_COUNT_LEN);
@@ -231,7 +242,7 @@ public class Decompile {
                 fieldInfo.setDescriptorIndex(descriptorIndex);
                 int attributeCount = readByteArrayToInt(bytes, AccessFlagConstant.COUNT);
                 fieldInfo.setAttributesCount(attributeCount);
-                    List<AttributeInfo> attributeInfoList = fieldInfo.getAttributeInfoList();
+                List<AttributeInfo> attributeInfoList = fieldInfo.getAttributeInfoList();
                 if (attributeCount > 0) {
                     for (int j = 0; j < attributeCount; j++) {
                         AttributeInfo attributeInfo = getAttributeInfo(bytes);
@@ -242,7 +253,7 @@ public class Decompile {
                 list.add(fieldInfo);
             }
         }
-        System.out.println("成员属性个数： " + count);
+        System.out.println("成员属性数量： " + count);
     }
 
     private static AttributeInfo getAttributeInfo(byte[] bytes) {
@@ -255,7 +266,6 @@ public class Decompile {
         ConstantAttribute attribute = constantType.getAttrList().get(1);
         String value = (String) attribute.getValue();
 
-        // TODO: 2020/8/8   AttributeInfo 未进行解析
         AttributeInfoFactory attributeInfoFactory = AttributeInfoFactoryBuild.getAttributeInfoFactory(attributeBytes, value);
         AttributeInfo attributeInfoInstance = attributeInfoFactory.getAttributeInfoInstance();
         attributeInfoInstance.setAttributeNameIndex(attributeNameIndex);
@@ -269,12 +279,10 @@ public class Decompile {
         int count = readByteArrayToInt(bytes, interfaceCountLen);
         if (count > 0) {
             for (int i = 0; i < count; i++) {
-//                byte[] interfaceIndexBytes = new byte[interfaceIndexLen];
-//                getBytes(bytes, interfaceIndexBytes);
                 int index = readByteArrayToInt(bytes, interfaceIndexLen);
             }
         }
-        System.out.println("接口个数： " + count);
+        System.out.println("接口数量： " + count);
     }
 
 
@@ -291,7 +299,14 @@ public class Decompile {
         int accessFlagsLen = 2;
         byte[] accessFlagsBytes = getBytes(bytes, accessFlagsLen);
         int flag = byteArrayToInt(accessFlagsBytes);
+        //确定访问控制权限值（0x0001）所对应的权限名称(public)
+        getAccessFlags(accessFlagsBytes);
+    }
+
+    private static List<ClassAccessFlag> getAccessFlags(byte[] accessFlagsBytes) {
+        int flag = byteArrayToInt(accessFlagsBytes);
         List<ClassAccessFlag> list = new ArrayList<>();
+        List<ClassAccessFlag> finalClassAccessFlagList = new ArrayList<>();
         ClassAccessFlag determine = null;
         for (Map.Entry<Integer, ClassAccessFlag> entry : CLASS_ACCESS_FLAGS.entrySet()) {
             Integer key = entry.getKey();
@@ -305,36 +320,43 @@ public class Decompile {
             }
         }
         if (null != determine) {
-            finalClassAccessFlag = determine;
-            return;
+            finalClassAccessFlagList.add(determine);
+            return finalClassAccessFlagList;
         }
-        List<ClassAccessFlag> finalClassAccessFlagList = new ArrayList<>();
+
         if (!CollectionUtils.isEmpty(list)) {
-            List<ClassAccessFlag> tempList = new ArrayList<>();
             for (int i = 0; i < list.size(); i++) {
                 ClassAccessFlag classAccessFlag = list.get(i);
-                int flag1 = classAccessFlag.getFlag();
-                tempList.add(list.get(i));
-                if (flag1 < flag) {
-                    int temp = flag1;
-                    for (int j = i + 1; j < list.size(); j++) {
-                        temp |= list.get(j).getFlag();
-                        if (temp == flag) {
-                            finalClassAccessFlagList = tempList;
-                            return;
-                        } else if (temp > flag) {
-                            tempList.clear();
-                            break;
-                        }
-                        tempList.add(list.get(j));
-                    }
+                int tempFlagTemp = classAccessFlag.getFlag();
+                if ((tempFlagTemp & flag) == tempFlagTemp) {
+                    finalClassAccessFlagList.add(classAccessFlag);
                 }
             }
         }
-        // TODO: 2020/8/8 类访问权限未解析完
-        System.out.println("类访问控制权限：" + bytesToHex(accessFlagsBytes));
+        String flagStr = getFlagString(finalClassAccessFlagList);
+        System.out.println("类访问控制权限：" + bytesToHex(accessFlagsBytes) + " " + flagStr);
+        return finalClassAccessFlagList;
+    }
 
-
+    /**
+     * 将权限值转化成权限字符串
+     * 0x0001 -> public
+     *
+     * @param finalClassAccessFlagList
+     * @return
+     */
+    private static String getFlagString(List<ClassAccessFlag> finalClassAccessFlagList) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
+        for (ClassAccessFlag classAccessFlag : finalClassAccessFlagList) {
+            String name = classAccessFlag.getName();
+            if (StringUtils.isNotBlank(name)) {
+                sb.append(name).append(" ");
+            }
+        }
+        String flagStr = sb.substring(0, sb.length() - 1);
+        flagStr += "]";
+        return flagStr;
     }
 
     public static void parseConstant(byte[] bytes) {
@@ -442,8 +464,9 @@ public class Decompile {
      */
     public static String bytesToHex(byte[] bytes) {
         StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < bytes.length; i++) {
-            String hex = Integer.toHexString(bytes[i] & 0xFF);
+        sb.append("0x");
+        for (byte aByte : bytes) {
+            String hex = Integer.toHexString(aByte & 0xFF);
             if (hex.length() < 2) {
                 sb.append(0);
             }

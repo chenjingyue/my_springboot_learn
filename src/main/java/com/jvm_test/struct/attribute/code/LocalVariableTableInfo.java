@@ -1,5 +1,8 @@
 package com.jvm_test.struct.attribute.code;
 
+import lombok.Data;
+
+@Data
 public class LocalVariableTableInfo {
 
     /**

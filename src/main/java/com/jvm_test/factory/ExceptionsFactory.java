@@ -1,10 +1,11 @@
 package com.jvm_test.factory;
 
 import com.jvm_test.struct.attribute.AttributeInfo;
-import com.jvm_test.struct.attribute.ConstantValue;
 import com.jvm_test.struct.attribute.Exceptions;
 import com.jvm_test.struct.constant.AccessFlagConstant;
 import com.jvm_test.utils.ByteUtil;
+
+import java.util.List;
 
 public class ExceptionsFactory implements AttributeInfoFactory {
 
@@ -22,15 +23,19 @@ public class ExceptionsFactory implements AttributeInfoFactory {
 
     public Exceptions getExceptions() {
 
-        int numberOfExceptions = ByteUtil.readByteArrayToIntFromOffset(bytes, AccessFlagConstant.NUMBER_OF_EXCEPTIONS);
+        Exceptions exceptions = new Exceptions();
+        int offset = 0;
+        int numberOfExceptions = ByteUtil.readByteArrayToIntFromOffset(bytes, offset, AccessFlagConstant.NUMBER_OF_EXCEPTIONS);
+        offset += AccessFlagConstant.NUMBER_OF_EXCEPTIONS;
+        exceptions.setNumberOfExceptions(numberOfExceptions);
+        List<Integer> exceptionIndexTable1 = exceptions.getExceptionIndexTable();
         if (numberOfExceptions > 0) {
             for (int i = 0; i < numberOfExceptions; i++) {
-                int exceptionIndexTable = ByteUtil.readByteArrayToIntFromOffset(bytes, AccessFlagConstant.EXCEPTION_INDEX_TABLE);
-
+                exceptionIndexTable1.add(ByteUtil.readByteArrayToIntFromOffset(bytes, offset, AccessFlagConstant.EXCEPTION_INDEX_TABLE));
+                offset += AccessFlagConstant.EXCEPTION_INDEX_TABLE;
             }
         }
-        Exceptions constantValue = new Exceptions(1,2);
-        return constantValue;
+        return exceptions;
     }
 
 
