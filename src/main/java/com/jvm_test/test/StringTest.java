@@ -10,8 +10,8 @@ public class StringTest {
 
 //        test05();
 //        test06();
-//        test07();
-        test08();
+        test07();
+//        test08();
     }
 
     public static void test01() {
@@ -77,10 +77,15 @@ public class StringTest {
     }
 
     public static void test07() {
-        String s1 = "11";
-        String s2 = new String("11");
+        String s1 = "小";
+        String s2 = "明";
+        String s3 = s1 +s2;
+//        String ss = "小明";
+        s3.intern();
+        System.out.println(s3 == s3);
+        while (true){
 
-        System.out.println(s1 == s2);
+        }
     }
 
     public static  void test08() {
