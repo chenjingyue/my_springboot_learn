@@ -1,4 +1,4 @@
-package com.jvm_test.test;
+package com.test;
 
 public class StringTest {
 
@@ -10,8 +10,8 @@ public class StringTest {
 
 //        test05();
 //        test06();
-        test07();
-//        test08();
+//        test07();
+        test08();
     }
 
     public static void test01() {
@@ -37,7 +37,7 @@ public class StringTest {
         String s1 = "1";
         String s2 = new String("1");
 
-        String s3 = s1+s2;
+        String s3 = s1 + s2;
 
         String s4 = "11";
 
@@ -79,26 +79,26 @@ public class StringTest {
     public static void test07() {
         String s1 = "小";
         String s2 = "明";
-        String s3 = s1 +s2;
+        String s3 = s1 + s2;
 //        String ss = "小明";
         s3.intern();
         System.out.println(s3 == s3);
-        while (true){
+        while (true) {
 
         }
     }
 
-    public static  void test08() {
-        String s1 = new String("真帅");
+    public static void test08() {
+//        String s1 = new String("真帅");
         String s2 = "子牙" + new String("真帅");
-        while (true){
-
-        }
-
-//        String s3 = "子牙真帅";
-////        System.out.println(s2 == s3);
+//        s2.intern();
+        String s3 = "子牙真帅";
+//        System.out.println(s2 == s3);
 //
-//        String ss = "子牙";
-//        String ss1 = "真帅";
+        String ss = "子牙";
+        String ss1 = "真帅";
+//        while (true){
+//
+//        }
     }
 }

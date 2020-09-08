@@ -1,5 +1,6 @@
 package com.jvm_test.factory;
 
+import com.jvm_test.ConstantFactory;
 import com.jvm_test.Decompile;
 import com.jvm_test.struct.attribute.AttributeInfo;
 import com.jvm_test.struct.attribute.code.CodeAttribute;
@@ -53,7 +54,7 @@ public class CodeAttributeFactory implements AttributeInfoFactory {
                 int codeAttrLength = readByteArrayToInt(bytes, AccessFlagConstant.ATTRIBUTE_LENGTH);
                 byte[] codeAttrInfoBytes = getBytes(this.bytes, codeAttrLength);
                 // 判断是否LineNumberTable LocalVariableTable属性
-                ConstantType constantType = Decompile.CONSTANT_POOL.get(codeAttrNameIndex);
+                ConstantType constantType = ConstantFactory.CONSTANT_POOL.get(codeAttrNameIndex);
                 ConstantAttribute attribute = constantType.getAttrList().get(1);
                 String value = (String) attribute.getValue();
                 CodeAttributeTable codeAttributeTable = null;

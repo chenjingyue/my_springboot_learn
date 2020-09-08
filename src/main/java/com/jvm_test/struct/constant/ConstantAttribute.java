@@ -14,7 +14,7 @@ public class ConstantAttribute {
     private int len;
 
     /**
-     * 1:index （索引）;2:number（数值）;
+     * 1:index （索引）;2:number（数值）; 3: string
      */
     private int type;
 
@@ -23,5 +23,12 @@ public class ConstantAttribute {
      */
     private String indexValue;
 
+    public ConstantAttribute() {
+    }
 
+    public ConstantAttribute(String name, int len, int type) {
+        this.name = name;
+        this.len = len;
+        this.type = type;
+    }
 }

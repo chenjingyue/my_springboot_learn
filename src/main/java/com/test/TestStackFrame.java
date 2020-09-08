@@ -1,8 +1,4 @@
-package com.jvm_test.test;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+package com.test;
 
 public class TestStackFrame {
 

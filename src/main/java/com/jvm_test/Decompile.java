@@ -25,120 +25,18 @@ public class Decompile {
     private static ClassAccessFlag finalClassAccessFlag;
 
     private int offset = 0;
-    private static Map<Integer, String> JDK_VERSION = new HashMap<>();
-    public static List<ConstantType> CONSTANT_POOL = new ArrayList<>();
+    //private static Map<Integer, String> JDK_VERSION = new HashMap<>();
+    //public static List<ConstantType> CONSTANT_POOL = new ArrayList<>();
     public List<ConstantType> constantPool = new ArrayList<>();
-    private static Map<Integer, ConstantType> CONSTANT_POOL_TYPE = new HashMap<>();
+   // private static Map<Integer, ConstantType> CONSTANT_POOL_TYPE = new HashMap<>();
     // 类访问权限
-    private static Map<Integer, ClassAccessFlag> CLASS_ACCESS_FLAGS = new LinkedHashMap<>();
+    //private static Map<Integer, ClassAccessFlag> CLASS_ACCESS_FLAGS = new LinkedHashMap<>();
 
-    private static short[] class_flags = new short[]{1, 8, 16, 32, 512, 1024, 4096, 8192, 16384};
+    //private static short[] class_flags = new short[]{1, 8, 16, 32, 512, 1024, 4096, 8192, 16384};
     //    private static String[] field_flags = new String[]{"0001","0002","0004","0008","0010","0020","0200","0400","1000","2000","4000"};
     private ClassInfo classInfo;
 
-    static {
-        JDK_VERSION.put(44, "1.0");
-        JDK_VERSION.put(45, "1.1");
-        JDK_VERSION.put(46, "1.2");
-        JDK_VERSION.put(47, "1.3");
-        JDK_VERSION.put(48, "1.4");
-        JDK_VERSION.put(49, "1.5");
-        JDK_VERSION.put(50, "1.6");
-        JDK_VERSION.put(51, "1.7");
-        JDK_VERSION.put(52, "1.8");
 
-
-        CLASS_ACCESS_FLAGS.put(1, new ClassAccessFlag(1, AccessFlagConstant.ACC_PUBLIC, AccessFlagConstant.PUBLIC));
-        CLASS_ACCESS_FLAGS.put(8, new ClassAccessFlag(8, AccessFlagConstant.ACC_STATIC, AccessFlagConstant.STATIC));
-        CLASS_ACCESS_FLAGS.put(16, new ClassAccessFlag(16, AccessFlagConstant.ACC_FINAL, AccessFlagConstant.FINAL));
-        CLASS_ACCESS_FLAGS.put(32, new ClassAccessFlag(32, AccessFlagConstant.ACC_SUPER));
-        CLASS_ACCESS_FLAGS.put(512, new ClassAccessFlag(512, AccessFlagConstant.ACC_INTERFACE, AccessFlagConstant.INTERFACE));
-        CLASS_ACCESS_FLAGS.put(1024, new ClassAccessFlag(1024, AccessFlagConstant.ACC_ABSTRACT, AccessFlagConstant.ABSTRACT));
-        CLASS_ACCESS_FLAGS.put(4096, new ClassAccessFlag(4096, AccessFlagConstant.ACC_SYNTHETIC));
-        CLASS_ACCESS_FLAGS.put(8192, new ClassAccessFlag(8192, AccessFlagConstant.ACC_ANNOTATION));
-        CLASS_ACCESS_FLAGS.put(16384, new ClassAccessFlag(16384, AccessFlagConstant.ACC_ENUM, AccessFlagConstant.ENUM));
-
-
-        ConstantType methodrefInfo = new ConstantType();
-        methodrefInfo.setName("CONSTANT_Methodref_info");
-        List<ConstantAttribute> attrList = methodrefInfo.getAttrList();
-        ConstantAttribute attribute = new ConstantAttribute();
-        attribute.setName("Class name");
-        attribute.setType(1);
-        attribute.setLen(2);
-        attrList.add(attribute);
-        attribute = new ConstantAttribute();
-        attribute.setName("Name and type");
-        attribute.setType(1);
-        attribute.setLen(2);
-        attrList.add(attribute);
-        CONSTANT_POOL_TYPE.put(10, methodrefInfo);
-
-        ConstantType Utf8Info = new ConstantType();
-        Utf8Info.setName("CONSTANT_Utf8_info");
-        attrList = Utf8Info.getAttrList();
-        attribute = new ConstantAttribute();
-        attribute.setName("Length of byte array");
-        attribute.setLen(2);
-        attrList.add(attribute);
-        attribute = new ConstantAttribute();
-        attribute.setName("String");
-        attribute.setLen(1);
-        attrList.add(attribute);
-        CONSTANT_POOL_TYPE.put(1, Utf8Info);
-
-        ConstantType fieldrefInfo = new ConstantType();
-        fieldrefInfo.setName("CONSTANT_Fieldref_info");
-        attrList = fieldrefInfo.getAttrList();
-        attribute = new ConstantAttribute();
-        attribute.setName("Class name");
-        attribute.setType(1);
-        attribute.setLen(2);
-        attrList.add(attribute);
-        attribute = new ConstantAttribute();
-        attribute.setName("Name and type");
-        attribute.setType(1);
-        attribute.setLen(2);
-        attrList.add(attribute);
-        CONSTANT_POOL_TYPE.put(9, fieldrefInfo);
-
-        ConstantType classInfo = new ConstantType();
-        classInfo.setName("CONSTANT_Class_info");
-        attrList = classInfo.getAttrList();
-        attribute = new ConstantAttribute();
-        attribute.setName("Class name");
-        attribute.setType(1);
-        attribute.setLen(2);
-        ;
-        attrList.add(attribute);
-        CONSTANT_POOL_TYPE.put(7, classInfo);
-
-        ConstantType nameAndTypeInfo = new ConstantType();
-        nameAndTypeInfo.setName("CONSTANT_NameAndType_info");
-        attrList = nameAndTypeInfo.getAttrList();
-        attribute = new ConstantAttribute();
-        attribute.setName("Name");
-        attribute.setType(1);
-        attribute.setLen(2);
-        ;
-        attrList.add(attribute);
-        attribute = new ConstantAttribute();
-        attribute.setName("Descriptor");
-        attribute.setType(1);
-        attribute.setLen(2);
-        attrList.add(attribute);
-        CONSTANT_POOL_TYPE.put(12, nameAndTypeInfo);
-
-        ConstantType stringInfo = new ConstantType();
-        stringInfo.setName("CONSTANT_String_info");
-        attrList = stringInfo.getAttrList();
-        attribute = new ConstantAttribute();
-        attribute.setName("String");
-        attribute.setType(1);
-        attribute.setLen(2);
-        attrList.add(attribute);
-        CONSTANT_POOL_TYPE.put(8, stringInfo);
-    }
 
     public static void main(String[] args) {
 
@@ -327,7 +225,7 @@ public class Decompile {
         List<ClassAccessFlag> list = new ArrayList<>();
         List<ClassAccessFlag> finalClassAccessFlagList = new ArrayList<>();
         ClassAccessFlag determine = null;
-        for (Map.Entry<Integer, ClassAccessFlag> entry : CLASS_ACCESS_FLAGS.entrySet()) {
+        for (Map.Entry<Integer, ClassAccessFlag> entry : ConstantFactory.CLASS_ACCESS_FLAGS.entrySet()) {
             Integer key = entry.getKey();
             ClassAccessFlag value = entry.getValue();
             if (key < flag) {
@@ -387,7 +285,7 @@ public class Decompile {
 
             int tag = bytes[offset] & 0xFF;
             offset += 1;
-            ConstantType constantType = CONSTANT_POOL_TYPE.get(tag);
+            ConstantType constantType = ConstantFactory.CONSTANT_POOL_TYPE.get(tag);
             type.setName(constantType.getName());
             List<ConstantAttribute> attrList = constantType.getAttrList();
             if (1 == tag) {
@@ -399,9 +297,6 @@ public class Decompile {
                     if (index == attrList.size() - 1) {
                         len *= length;
                         byte[] nameBytes = getBytes(bytes, len);
-//                        for (int i = 0; i < nameBytes.length; i++) {
-//                            nameBytes[i] = bytes[offset + i];
-//                        }
                         value = new String(nameBytes);
                     } else {
                         byte[] nameBytes = getBytes(bytes, len);
@@ -430,7 +325,7 @@ public class Decompile {
                     list.add(att);
                 }
             }
-            CONSTANT_POOL.add(type);
+            ConstantFactory.CONSTANT_POOL.add(type);
             this.constantPool.add(type);
         }
 
@@ -444,7 +339,7 @@ public class Decompile {
         byte[] majorVersionBytes = getBytes(bytes, majorVersionLen);
         classInfo.setMinorVersion(byteArrayToInt(minorVersionBytes));
         classInfo.setMajorVersion(byteArrayToInt(majorVersionBytes));
-        System.out.println("主版本号：" + JDK_VERSION.getOrDefault(byteArrayToInt(majorVersionBytes), "没有找到JDK版本"));
+        System.out.println("主版本号：" + ConstantFactory.JDK_VERSION.getOrDefault(byteArrayToInt(majorVersionBytes), "没有找到JDK版本"));
     }
 
     private byte[] getBytes(byte[] bytes, int len) {
