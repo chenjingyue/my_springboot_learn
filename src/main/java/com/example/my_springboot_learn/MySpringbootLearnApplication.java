@@ -7,17 +7,15 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Configuration;
 
-//@SpringBootApplication
-@Configuration
-@MapperScan(basePackages = "com.example.my_springboot_learn.mapper",
-		markerInterface = UserMapper.class)
+@SpringBootApplication
+@MapperScan(basePackages = "com.example.my_springboot_learn.mapper")
 public class MySpringbootLearnApplication {
 
 	public static void main(String[] args) {
-//		SpringApplication.run(MySpringbootLearnApplication.class, args);
+		SpringApplication.run(MySpringbootLearnApplication.class, args);
 
-		AnnotationConfigApplicationContext ac =
-				new AnnotationConfigApplicationContext(MySpringbootLearnApplication.class);
+//		AnnotationConfigApplicationContext ac =
+//				new AnnotationConfigApplicationContext(MySpringbootLearnApplication.class);
 
 
 	}
