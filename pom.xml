@@ -6,7 +6,11 @@
     <groupId>com.example</groupId>
     <artifactId>my_springboot_learn</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>jar</packaging>
+<!--    <packaging>jar</packaging>-->
+    <modules>
+        <module>spring-batch-demo</module>
+    </modules>
+    <packaging>pom</packaging>
 
     <name>my_springboot_learn</name>
     <description>Demo project for Spring Boot</description>
