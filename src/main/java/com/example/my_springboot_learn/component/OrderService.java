@@ -16,8 +16,8 @@ public class OrderService implements BeanFactoryAware, InitializingBean {
     @Autowired
     private AccountService accountService;
 
-    @Autowired
-    private String name;
+//    @Autowired
+//    private String name;
 
 
     public OrderService() {
@@ -26,17 +26,17 @@ public class OrderService implements BeanFactoryAware, InitializingBean {
 
     @Override
     public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-        System.out.println("aaaaaa");
+        System.out.println("setBeanFactory");
     }
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        System.out.println("aaaaaa");
+        System.out.println("afterPropertiesSet");
     }
 
     @PostConstruct
     public void init() throws Exception {
-        System.out.println("aaaaaa");
+        System.out.println("@PostConstruct:init");
     }
 
 //    @Autowired(required = false)

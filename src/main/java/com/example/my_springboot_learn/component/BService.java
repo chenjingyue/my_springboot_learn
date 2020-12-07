@@ -4,16 +4,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
-@Configuration
+//@Configuration
 public class BService {
 
-    @Bean
-    public AService aService() {
-        return new AService();
-    }
 
-    @Bean
-    public AService bService() {
-        return new AService();
-    }
 }

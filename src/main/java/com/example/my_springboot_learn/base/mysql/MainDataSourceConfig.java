@@ -4,6 +4,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
@@ -13,23 +14,28 @@ import org.springframework.context.annotation.Primary;
 import javax.annotation.Resource;
 import javax.sql.DataSource;
 
-/**
- * @author : ZhangDingHui
- * @date : Created int 11:05 AM 2019/9/25
- */
-//@Configuration
-@MapperScan(annotationClass = Mapper.class, basePackages = {"com.yg.education.web.dao"}, sqlSessionFactoryRef =
+
+@Configuration
+@MapperScan(annotationClass = Mapper.class, basePackages = {"com.example.my_springboot_learn.mapper"}, sqlSessionFactoryRef =
         "mainSqlSessionFactory")
 public class MainDataSourceConfig {
 
     @Resource
     private MybatisConfigurationSupport mybatisConfigurationSupport;
 
+    @Primary
+    @Bean(name = "mainDataSourceProperties")
+    @ConfigurationProperties(prefix = "spring.datasource.cy")
+    public DataSourceProperties dataSourceProperties() {
+        return new DataSourceProperties();
+    }
+
     @Bean(name = "mainDataSource")
     @Primary
-    @ConfigurationProperties(prefix = "spring.datasource.yg")
     public DataSource mainDataSource() {
-        return DataSourceBuilder.create().build();
+        DataSource dataSource = dataSourceProperties().initializeDataSourceBuilder().build();
+        DataSource dataSource1 = DataSourceBuilder.create().build();
+        return dataSource;
     }
 
     @Primary

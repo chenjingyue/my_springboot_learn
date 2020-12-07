@@ -1,10 +1,10 @@
-package comdemo.consumer;
+package com.cy.demo;
 
 import org.junit.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ConsumerApplicationTests {
+class SpringWebfluxDemoApplicationTests {
 
     @Test
     void contextLoads() {

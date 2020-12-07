@@ -16,11 +16,8 @@ import org.springframework.util.StringUtils;
 
 import javax.sql.DataSource;
 
-/**
- * @author : ZhangDingHui
- * @date : Created int 11:49 AM 2019/3/21
- */
-//@Component
+
+@Component
 public class MybatisConfigurationSupport {
 
     private final MybatisProperties mybatisProperties;

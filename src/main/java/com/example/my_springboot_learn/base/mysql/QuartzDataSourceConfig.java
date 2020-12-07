@@ -11,10 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import javax.annotation.Resource;
 import javax.sql.DataSource;
 
-/**
- * @author : ZhangDingHui
- * @date : Created int 11:05 AM 2019/9/25
- */
+
 //@Configuration
 @MapperScan(annotationClass = QuartzMapper.class, basePackages = {"com.yg.education.web.dao.quartz"}, sqlSessionFactoryRef =
         "quartzSqlSessionFactory")
@@ -24,7 +21,7 @@ public class QuartzDataSourceConfig {
     private MybatisConfigurationSupport mybatisConfigurationSupport;
 
     @Bean(name = "quartzDataSource")
-    @ConfigurationProperties(prefix = "spring.datasource.quartz")
+//    @ConfigurationProperties(prefix = "spring.datasource.quartz")
     public DataSource quartzDataSource() {
         return DataSourceBuilder.create().build();
     }

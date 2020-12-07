@@ -7,6 +7,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -14,9 +15,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @SpringBootApplication
 @Configuration
-@MapperScan(basePackages = "com.example.my_springboot_learn.mapper", markerInterface = BaseMapper.class)
+//@MapperScan(basePackages = "com.example.my_springboot_learn.mapper", markerInterface = BaseMapper.class)
 @EnableSwagger2
 public class MySpringbootLearnApplication {
 

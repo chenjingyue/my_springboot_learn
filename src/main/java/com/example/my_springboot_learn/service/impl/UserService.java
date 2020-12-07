@@ -14,14 +14,14 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@Transactional
+//@Transactional
 public class UserService implements IUserService {
 
     @Autowired
     private UserMapper userMapper;
 
     @Override
-    @Cacheable(value = "user", keyGenerator = "myKeyGenerator")
+//    @Cacheable(value = "user", keyGenerator = "myKeyGenerator")
     public List<User> selectAllUser() throws Exception {
         return userMapper.selectAllUser();
     }

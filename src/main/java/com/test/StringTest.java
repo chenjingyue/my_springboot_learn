@@ -3,15 +3,8 @@ package com.test;
 public class StringTest {
 
     public static void main(String[] args) {
-//        test01();
-//        test02();
-//        test03();
-//        test04();
+        test04();
 
-//        test05();
-//        test06();
-//        test07();
-        test08();
     }
 
     public static void test01() {
@@ -45,10 +38,11 @@ public class StringTest {
     }
 
     public static void test04() {
+        String s1 = "11";
+
         // 创建两个String对象，一个char[] ,会将String放到常量池中
         String s2 = new String("11");
 
-        String s1 = "11";
 //        s2.intern();
 
         System.out.println(s1 == s2);
