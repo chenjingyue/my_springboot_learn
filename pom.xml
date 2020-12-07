@@ -13,7 +13,7 @@
         <module>rocketmq-spring-consumer</module>
         <module>spring-webflux-demo</module>
     </modules>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
 
     <name>my_springboot_learn</name>
     <description>Demo project for Spring Boot</description>
