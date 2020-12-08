@@ -9,6 +9,7 @@ import org.aspectj.lang.annotation.Pointcut;
 //@Component
 public class DataSourceAop {
 
+
     @Pointcut("!@annotation(com.cy.springbootlearndemo.config.anno.Master) " +
             "&& (execution(* com.cy.springbootlearndemo.mapper..*.select*(..)) " +
             "|| execution(* com.cy.springbootlearndemo.mapper..*.get*(..)))")
