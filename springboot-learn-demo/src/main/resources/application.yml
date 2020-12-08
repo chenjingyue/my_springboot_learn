@@ -1,0 +1,38 @@
+server:
+  port: 9001
+spring:
+  datasource:
+    master:
+  #    driver-class-name: com.mysql.cj.jdbc.Driver
+      jdbc-url: jdbc:mysql://192.168.106.128:3306/test1?master=1&useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&failOverReadOnly=false&zeroDateTimeBehavior=convertToNull&tinyInt1isBit=false&useSSL=false&allowMultiQueries=true
+      username: root
+      password: chenyu123
+    salve1:
+      #    driver-class-name: com.mysql.cj.jdbc.Driver
+      jdbc-url: jdbc:mysql://192.168.106.128:3306/test2?master=1&useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&failOverReadOnly=false&zeroDateTimeBehavior=convertToNull&tinyInt1isBit=false&useSSL=false&allowMultiQueries=true
+      username: root
+      password: chenyu123
+  redis:
+    database: 0
+    host: 192.168.1.113
+    port: 6379
+    password: redis
+    jedis:
+     pool:
+      max-active: 200
+      max-wait: -1
+      max-idle: 10
+      min-idle: 0
+    timeout: 1000
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.cy.springbootlearndemo.model
+  configuration:
+    cache-enabled: true
+logging:
+  level:
+   com:
+    example:
+     my_springboot_learn:
+      mapper: debug
+
