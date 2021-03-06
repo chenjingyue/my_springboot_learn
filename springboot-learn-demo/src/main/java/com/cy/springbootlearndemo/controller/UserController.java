@@ -1,5 +1,7 @@
 package com.cy.springbootlearndemo.controller;
 
+import com.cy.springbootlearndemo.feign.WebfluxFeign;
+import com.cy.springbootlearndemo.feign.WebfluxFeign1;
 import com.cy.springbootlearndemo.model.ResponseVO;
 import com.cy.springbootlearndemo.model.User;
 import com.cy.springbootlearndemo.service.impl.UserService;
@@ -23,6 +25,11 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private WebfluxFeign webfluxFeign;
+
+    @Autowired
+    private WebfluxFeign1 webfluxFeign1;
 
     @Autowired
     private RestTemplate restTemplate;
@@ -34,11 +41,13 @@ public class UserController {
         ResponseVO<List<User>> responseVO = new ResponseVO<>();
         try {
             logger.info("Query user information.");
-            List<User> allUser = userService.selectAllUser();
+            System.out.println("webfluxFeign: "+webfluxFeign.user("aaa"));
+            System.out.println("webfluxFeign1: "+webfluxFeign1.user("aaa"));
+//            List<User> allUser = userService.selectAllUser();
             responseVO.setCode(HttpServletResponse.SC_OK);
             responseVO.setMessage("success");
-            responseVO.setData(allUser);
-            logger.info("User info: " + allUser);
+//            responseVO.setData(allUser);
+//            logger.info("User info: " + allUser);
         } catch (Exception e) {
             logger.error("Failed to query user information", e);
             responseVO.setCode(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

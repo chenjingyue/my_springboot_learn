@@ -3,7 +3,12 @@ package com.test;
 public class StringTest {
 
     public static void main(String[] args) {
-        test04();
+        int size = 1024;
+        int aa = 2055;
+        System.out.println( size << 0);
+        System.out.println( aa << 0);
+
+//        test04();
 
     }
 

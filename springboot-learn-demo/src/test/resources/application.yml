@@ -1,0 +1,24 @@
+server:
+  port: 9001
+spring:
+  application:
+    name: springboot-learn
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    jdbc-url: jdbc:postgresql://localhost:5432/testdb
+    username: postgres
+    password: postgres
+
+
+#mybatis:
+#  mapper-locations: classpath:mapper/*.xml
+#  type-aliases-package: com.cy.springbootlearndemo.model
+#  configuration:
+#    cache-enabled: true
+logging:
+  level:
+   com:
+    example:
+     my_springboot_learn:
+      mapper: debug
+

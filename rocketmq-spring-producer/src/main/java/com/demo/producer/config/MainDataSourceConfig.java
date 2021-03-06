@@ -14,7 +14,7 @@ import javax.annotation.Resource;
 import javax.sql.DataSource;
 
 
-@Configuration
+//@Configuration
 @MapperScan(annotationClass = Mapper.class, basePackages = {"com.demo.producer.dao"}, sqlSessionFactoryRef =
         "mainSqlSessionFactory")
 public class MainDataSourceConfig {

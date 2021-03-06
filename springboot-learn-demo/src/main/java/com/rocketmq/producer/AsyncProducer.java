@@ -15,6 +15,7 @@ public class AsyncProducer {
         DefaultMQProducer producer = new DefaultMQProducer("please_rename_unique_group_name");
         // Specify name server addresses.
         producer.setNamesrvAddr("localhost:9876");
+        producer.setSendMsgTimeout(200000);
         //Launch the instance.
         producer.start();
         producer.setRetryTimesWhenSendAsyncFailed(0);

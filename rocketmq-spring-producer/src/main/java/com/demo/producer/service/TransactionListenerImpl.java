@@ -11,7 +11,7 @@ import org.springframework.messaging.Message;
 import java.util.Map;
 
 @Slf4j
-@RocketMQTransactionListener
+//@RocketMQTransactionListener
 class TransactionListenerImpl implements RocketMQLocalTransactionListener {
     @Override
     public RocketMQLocalTransactionState executeLocalTransaction(Message msg, Object arg) {

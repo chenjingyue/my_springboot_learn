@@ -5,6 +5,7 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -24,7 +25,7 @@ public class UserController implements BeanFactoryAware{
 
 
     @GetMapping("/user")
-    public String user(String name) {
+    public String user(@RequestParam(required = false,name = "name") String name) {
        System.out.println(null == beanFactory);
         return name;
     }

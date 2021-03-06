@@ -1,5 +1,6 @@
 package com.rocketmq;
 
+import org.apache.rocketmq.client.consumer.DefaultMQPullConsumer;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
@@ -12,7 +13,8 @@ import java.util.List;
 public class Consumer {
 
     public static void main(String[] args) throws InterruptedException, MQClientException {
-
+//        DefaultMQPullConsumer a = new DefaultMQPullConsumer();
+//        a.start();
         // Instantiate with specified consumer group name.
         DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("aaa");
 

@@ -43,7 +43,7 @@ public class JedisConfig {
         jedisPoolConfig.setMaxTotal(maxActive);
         jedisPoolConfig.setMinIdle(minIdle);
         JedisPool jedisPool = new JedisPool(jedisPoolConfig,host,port,timeout,password);
-
+        jedisPool.getResource().get("");
         logger.info("JedisPool注入成功！");
         logger.info("redis地址：" + host + ":" + port);
         return  jedisPool;
