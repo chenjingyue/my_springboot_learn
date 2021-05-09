@@ -1,6 +1,9 @@
 package com.cy.springbootlearndemo.service.impl;
 
+import com.cy.springbootlearndemo.model.QueryCondition;
 import com.cy.springbootlearndemo.service.IGitHubService;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

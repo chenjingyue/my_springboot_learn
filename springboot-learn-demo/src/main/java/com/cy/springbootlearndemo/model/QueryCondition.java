@@ -1,5 +1,9 @@
 package com.cy.springbootlearndemo.model;
 
+import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
+
+//@Component
 public class QueryCondition {
 
     private Integer id;

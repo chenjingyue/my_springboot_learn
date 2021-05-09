@@ -1,13 +1,17 @@
 package com.cy.springbootlearndemo;
 
+import com.cy.springbootlearndemo.config.HelloImportBeanDefinitionRegistrar;
+import com.cy.springbootlearndemo.config.MyTypeExcludeFilter;
 import com.cy.springbootlearndemo.mapper.BaseMapper;
+import com.cy.springbootlearndemo.model.QueryCondition;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.AutoConfigurationExcludeFilter;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.TypeExcludeFilter;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import rx.Observable;
 import rx.Observer;
@@ -19,10 +23,13 @@ import rx.observables.SyncOnSubscribe;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
+@ComponentScan(excludeFilters = {
+        @ComponentScan.Filter(type = FilterType.CUSTOM, classes = MyTypeExcludeFilter.class)})
 //@MapperScan(basePackages = "com.cy.springbootlearndemo.mapper", markerInterface = BaseMapper.class)
 @EnableSwagger2
-@EnableFeignClients
-@EnableDiscoveryClient
+//@EnableFeignClients
+//@EnableDiscoveryClient
+//@Import(HelloImportBeanDefinitionRegistrar.class)
 public class SpringbootLearnDemoApplication {
 
     public static void main(String[] args) {

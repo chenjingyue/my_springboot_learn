@@ -25,7 +25,7 @@ public class MainDataSourceConfig {
 
     @Primary
     @Bean(name = "mainDataSourceProperties")
-    @ConfigurationProperties(prefix = "spring.datasource.cy")
+    @ConfigurationProperties(prefix = "spring.datasource.main")
     public DataSourceProperties dataSourceProperties() {
         return new DataSourceProperties();
     }
@@ -34,7 +34,7 @@ public class MainDataSourceConfig {
     @Primary
     public DataSource mainDataSource() {
         DataSource dataSource = dataSourceProperties().initializeDataSourceBuilder().build();
-        DataSource dataSource1 = DataSourceBuilder.create().build();
+//        DataSource dataSource1 = DataSourceBuilder.create().build();
         return dataSource;
     }
 

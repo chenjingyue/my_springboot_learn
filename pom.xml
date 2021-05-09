@@ -13,6 +13,7 @@
         <module>rocketmq-spring-consumer</module>
         <module>spring-webflux-demo</module>
         <module>springboot-learn-demo</module>
+<!--        <module>vertx-demo</module>-->
     </modules>
     <packaging>pom</packaging>
     <name>my_springboot_learn</name>

@@ -2,7 +2,8 @@ package com.cy.springbootlearndemo.controller;
 
 import com.cy.springbootlearndemo.model.ResponseVO;
 import com.cy.springbootlearndemo.model.User;
-import com.cy.springbootlearndemo.service.test1.impl.UserService;
+import com.cy.springbootlearndemo.service.test1.IUserService;
+import com.cy.springbootlearndemo.service.test1.impl.UserServiceTest1;
 import io.swagger.annotations.ApiOperation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,7 +20,7 @@ public class UserTest1Controller {
     private static final Logger logger = LogManager.getLogger(UserTest1Controller.class);
 
     @Resource(name="userServcieTest1")
-    private UserService userService;
+    private IUserService userServiceTest1;
 
     @ApiOperation(value="获取用户列表", notes="获取用户列表")
     @RequestMapping(value="/userstest1", method = RequestMethod.GET)
@@ -28,7 +29,7 @@ public class UserTest1Controller {
         ResponseVO<List<User>> responseVO = new ResponseVO<>();
         try {
             logger.info("Query user information.");
-            List<User> allUser = userService.selectAllUser();
+            List<User> allUser = userServiceTest1.selectAllUser();
             responseVO.setCode(HttpServletResponse.SC_OK);
             responseVO.setMessage("success");
             responseVO.setData(allUser);
@@ -48,7 +49,7 @@ public class UserTest1Controller {
         ResponseVO<List<User>> responseVO = new ResponseVO<>();
         try {
             logger.info("Query user information.");
-            userService.testTransactional();
+            userServiceTest1.testTransactional();
             responseVO.setCode(HttpServletResponse.SC_OK);
             responseVO.setMessage("success");
         } catch (Exception e) {
@@ -69,7 +70,7 @@ public class UserTest1Controller {
         ResponseVO<List<User>> responseVO = new ResponseVO<>();
         try {
             logger.info("Query user information.");
-            userService.updateUser(user);
+            userServiceTest1.updateUser(user);
             responseVO.setCode(HttpServletResponse.SC_OK);
             responseVO.setMessage("success");
         } catch (Exception e) {
@@ -87,7 +88,7 @@ public class UserTest1Controller {
         ResponseVO<List<User>> responseVO = new ResponseVO<>();
         try {
             logger.info("Query user information.");
-            userService.insertUser(user);
+            userServiceTest1.insertUser(user);
             responseVO.setCode(HttpServletResponse.SC_OK);
             responseVO.setMessage("success");
         } catch (Exception e) {

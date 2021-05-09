@@ -1,5 +1,7 @@
 package com.cy.springbootlearndemo.service.test1.impl;
 
+import com.cy.springbootlearndemo.base.multipleDataSource.DataSourceHolder;
+import com.cy.springbootlearndemo.mapper.UserMapper;
 import com.cy.springbootlearndemo.mapper.test1.UserTest1Mapper;
 import com.cy.springbootlearndemo.mapper.test2.UserTest2Mapper;
 import com.cy.springbootlearndemo.model.User;
@@ -14,16 +16,27 @@ import java.util.List;
 @Service("userServcieTest1")
 //@Transactional("test2TransactionManager")
 //@Transactional()
-public class UserService implements IUserService {
+public class UserServiceTest1 implements IUserService {
 
     @Autowired
     private UserTest1Mapper userTest1Mapper;
     @Autowired
     private UserTest2Mapper userTest2Mapper;
 
+
+    @Autowired
+    private UserMapper userMapper;
+
+    private int i = 0;
+
     @Override
     public List<User> selectAllUser() throws Exception {
-        return userTest1Mapper.selectAllUser();
+        if(i++ % 2 == 0) {
+            DataSourceHolder.set("master");
+        } else {
+            DataSourceHolder.set("salve1");
+        }
+        return userMapper.selectAllUser();
     }
 
     @Override

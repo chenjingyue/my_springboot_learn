@@ -19,7 +19,7 @@ import java.util.Map;
  * 读写分离数据源
  */
 
-@Configuration
+//@Configuration
 @MapperScan(basePackages = {"com.cy.springbootlearndemo.mapper"}, sqlSessionFactoryRef = "separateSqlSessionFactory")
 public class SeparateDataSourceConfig {
 
