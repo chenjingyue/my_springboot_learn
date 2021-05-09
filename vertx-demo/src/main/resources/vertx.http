@@ -1,0 +1,20 @@
+
+
+###
+POST http://localhost:8888/name?name=ccc
+Content-Type: application/x-www-form-urlencoded
+
+###
+GET http://localhost:8888/name?name=aaa
+Accept: application/json
+
+
+
+###
+POST http://localhost:9999/name
+Content-Type: application/json
+
+{
+  "name":"chenyu"
+}
+###
