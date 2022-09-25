@@ -1,0 +1,13 @@
+{
+  "port": 9999,
+  "server": [
+    {
+      "location":"/hello",
+      "proxy_pass": "http://127.0.0.1:8888"
+    },
+    {
+      "location":"/",
+      "proxy_pass": "http://127.0.0.1:8888"
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+server:
+  port: 9001
+spring:
+  application:
+    name: springboot-learn
+  cloud:
+    nacos:
+      discovery:
+        server-addr: http://localhost:8848
+  datasource:
+    master:
+  #    driver-class-name: com.mysql.cj.jdbc.Driver
+      jdbc-url: jdbc:mysql://192.168.106.128:3306/test1?master=1&useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&failOverReadOnly=false&zeroDateTimeBehavior=convertToNull&tinyInt1isBit=false&useSSL=false&allowMultiQueries=true
+      username: root
+      password: chenyu123
+    salve1:
+      #    driver-class-name: com.mysql.cj.jdbc.Driver
+      jdbc-url: jdbc:mysql://192.168.106.128:3306/test2?master=1&useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&failOverReadOnly=false&zeroDateTimeBehavior=convertToNull&tinyInt1isBit=false&useSSL=false&allowMultiQueries=true
+      username: root
+      password: chenyu123
+  redis:
+    database: 0
+    host: 192.168.1.113
+    port: 6379
+    password: redis
+    jedis:
+     pool:
+      max-active: 200
+      max-wait: -1
+      max-idle: 10
+      min-idle: 0
+    timeout: 1000
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.cy.springbootlearndemo.model
+  configuration:
+    cache-enabled: true
+logging:
+  level:
+   com:
+    example:
+     my_springboot_learn:
+      mapper: debug
+#### feign  feign.hystrix.enabled
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 20000
+        readTimeout: 20000
+  hystrix:
+    enabled: true
+  httpclient:
+    connection-timeout: 20000
+    connection-timer-repeat: 20000
+    enabled: true
+    max-connections: 200
+    max-connections-per-route: 50

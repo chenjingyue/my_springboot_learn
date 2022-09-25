@@ -1,0 +1,6 @@
+.idea/
+*.iml
+target/
+transaction-logs/
+tmlog.lck
+tmlog5.log
