@@ -23,6 +23,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 @Configuration
+@AutoConfigureAfter(MailSenderAutoConfiguration.class)
 public class AlarmAutoConfiguration  {
 
 
@@ -35,31 +36,35 @@ public class AlarmAutoConfiguration  {
         @Bean
         @ConditionalOnMissingBean
         public MailWarnService mailWarnService(MailConfig mailConfig,
-                                               @Autowired(required = false) JavaMailSenderImpl javaMailSender) {
+                                               MailExecute mailExecute) {
             MailWarnService mailWarnService = new MailWarnService();
-            mailWarnService.init(mailConfig,javaMailSender);
+            mailWarnService.setMailExecute(mailExecute);
+//            mailWarnService.init(mailConfig,javaMailSender);
             AlarmFactoryExecute.addAlarmWarnService(mailWarnService);
             return mailWarnService;
         }
 
 
+        @Bean
+        @ConditionalOnProperty(prefix = MailConfig.PREFIX, name = "useSpringbootMail", havingValue = "true")
+        @ConditionalOnBean(JavaMailSenderImpl.class)
+        public SpringbootMailExecute springbootMailExecute(MailConfig mailConfig, JavaMailSenderImpl javaMailSender) {
+            SpringbootMailExecute mailExecute = new SpringbootMailExecute();
+            mailExecute.setMailConfig(mailConfig);
+            mailExecute.setJavaMailSender(javaMailSender);
+            System.out.println("-----------调用springbootMailExecute--------------");
+            return mailExecute;
+        }
 
-//        @Bean
-//        @ConditionalOnMissingBean(MailExecute.class)
-//        public JavaMailExecute javaMailExecute(MailConfig mailConfig) {
-//            JavaMailExecute mailExecute = new JavaMailExecute();
-//            mailExecute.setMailConfig(mailConfig);
-//            return mailExecute;
-//        }
-//
-//        @Bean
-//        @ConditionalOnProperty(prefix = MailConfig.PREFIX, name = "useSpringbootMail", havingValue = "true")
-//        public SpringbootMailExecute springbootMailExecute(MailConfig mailConfig, JavaMailSenderImpl javaMailSender) {
-//            SpringbootMailExecute mailExecute = new SpringbootMailExecute();
-//            mailExecute.setMailConfig(mailConfig);
-//            mailExecute.setJavaMailSender(javaMailSender);
-//            return mailExecute;
-//        }
+        @Bean
+        @ConditionalOnMissingBean(MailExecute.class)
+        public JavaMailExecute javaMailExecute(MailConfig mailConfig) {
+            JavaMailExecute mailExecute = new JavaMailExecute();
+            mailExecute.setMailConfig(mailConfig);
+            System.out.println("-----------调用javaMailExecute--------------");
+            return mailExecute;
+        }
+
 
     }
 
