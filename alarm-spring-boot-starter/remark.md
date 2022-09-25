@@ -30,8 +30,8 @@ spring:
             from: 1544552008@qq.com # 发送人
             host: smtp.qq.com
             port: 25
-            username: 1544552008@qq.com
-            password: ohklkskrsckribbi
+            username: 用户名
+            password: 密码
     mail:   # 使用spring-boot-starter-mail整合的邮件功能 需要配置此属性
         host: smtp.qq.com
         username: 1544552008@qq.com
