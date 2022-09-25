@@ -12,14 +12,13 @@ import com.alarm.spring.boot.autoconfigure.template.AlarmTemplateProvider;
 import com.alarm.spring.boot.autoconfigure.template.YamlAlarmTemplateProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.boot.autoconfigure.condition.*;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.mail.MailSenderAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 @Configuration
@@ -35,8 +34,7 @@ public class AlarmAutoConfiguration  {
 
         @Bean
         @ConditionalOnMissingBean
-        public MailWarnService mailWarnService(MailConfig mailConfig,
-                                               MailExecute mailExecute) {
+        public MailWarnService mailWarnService(MailExecute mailExecute) {
             MailWarnService mailWarnService = new MailWarnService();
             mailWarnService.setMailExecute(mailExecute);
 //            mailWarnService.init(mailConfig,javaMailSender);
