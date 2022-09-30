@@ -67,16 +67,16 @@ public class AlarmAutoConfiguration  {
     }
 
 
-    // 消息模板配置装载
-    @Configuration
-    @ConditionalOnProperty(prefix = TemplateConfig.PREFIX, name = "enabled", havingValue = "true")
-    @EnableConfigurationProperties(TemplateConfig.class)
     /**
      *  导入配置类也可以在TemplateConfig上用 @Component 注入到容器中。
      *  当通过jar包方式导入到项目时，自动扫描基本上不会去扫描jar包中的类(@ComponentScan 自动扫描是项目的包路径，不会配置jar包中的包路径)
      *  假如扫描到了，但是这个类也不一定就需要注入到容器当中去，所以通过条件注解去控制是否注入。
      *  @EnableConfigurationProperties 只能写在类上面，在@Bean的方法外嵌套一个类。
      */
+    // 消息模板配置装载
+    @Configuration
+    @ConditionalOnProperty(prefix = TemplateConfig.PREFIX, name = "enabled", havingValue = "true")
+    @EnableConfigurationProperties(TemplateConfig.class)
     public static class TemplateConfiguration {
 
         @Bean

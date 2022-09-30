@@ -8,7 +8,6 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.SmartInitializingSingleton;
-import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.listener.ChannelTopic;
@@ -94,7 +93,7 @@ public class RedisMessageListenerMethodProcessor implements SmartInitializingSin
 
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         RedisConnectionFactory redisConnectionFactory = beanFactory.getBean(RedisConnectionFactory.class);
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(redisConnectionFactory);
@@ -104,10 +103,29 @@ public class RedisMessageListenerMethodProcessor implements SmartInitializingSin
     }
 
 
-    @Override
+    //    @Override
     public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
         this.beanFactory = (ConfigurableListableBeanFactory) beanFactory;
     }
+    /**
+     *  未导入jedis, RedisConnectionFactory 实现类为 LettuceConnectionFactory
+     * 原本想法：
+     *  在BeanFactoryPostProcessor#postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) 方法中
+     *  获取RedisConnectionFactory 的bean，设置到RedisMessageListenerContainer中
+     *  再将RedisMessageListenerContainer注册到容器中
+     * 报错：
+     *  Failed to instantiate [org.springframework.boot.autoconfigure.data.redis.LettuceConnectionConfiguration]:
+     *  No default constructor found; nested exception is java.lang.NoSuchMethodException:
+     *  org.springframework.boot.autoconfigure.data.redis.LettuceConnectionConfiguration.<init>()
+     * 原因：
+     *  通过beanFactory.getBean(RedisConnectionFactory.class) 获取bean时，此时容器还没有到实例化bean步骤，
+     *  getBean() 去获取对象，会去创建对象LettuceConnectionFactory，
+     *  LettuceConnectionFactory 是通过@Bean 配置在LettuceConnectionConfiguration类中，
+     *  需要先去实例化LettuceConnectionConfiguration，此时后置处理器AutowiredAnnotationBeanPostProcessor(推断构造方法)未实例化
+     *  只能使用默认无参构造方法，但是LettuceConnectionConfiguration只有一个有参构造方法
+     *  导致实例化时报错
+     *
+     */
 
 
 }
