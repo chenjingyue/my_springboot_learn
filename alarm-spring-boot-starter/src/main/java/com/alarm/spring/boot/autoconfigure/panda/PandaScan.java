@@ -1,4 +1,4 @@
-package com.alarm.spring.boot.autoconfigure.annotation;
+package com.alarm.spring.boot.autoconfigure.panda;
 
 import org.springframework.context.annotation.Import;
 

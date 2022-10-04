@@ -1,7 +1,5 @@
 package com.alarm.spring.boot.autoconfigure.panda;
 
-import com.alarm.spring.boot.autoconfigure.annotation.Panda;
-
 @Panda
 public class User {
     private String name;

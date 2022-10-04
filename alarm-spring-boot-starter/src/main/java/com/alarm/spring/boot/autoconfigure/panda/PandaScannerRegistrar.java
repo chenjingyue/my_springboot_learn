@@ -1,4 +1,4 @@
-package com.alarm.spring.boot.autoconfigure.annotation;
+package com.alarm.spring.boot.autoconfigure.panda;
 
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.context.annotation.ClassPathBeanDefinitionScanner;
@@ -7,8 +7,12 @@ import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.type.AnnotationMetadata;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 
+import java.lang.annotation.Annotation;
 import java.util.Map;
 
+/**
+ *  参考MapperScannerRegistrar
+ */
 public class PandaScannerRegistrar implements ImportBeanDefinitionRegistrar {
     @Override
     public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
@@ -18,12 +22,12 @@ public class PandaScannerRegistrar implements ImportBeanDefinitionRegistrar {
             AnnotationAttributes attributes = new AnnotationAttributes(annotationAttributes);
             String[] values = attributes.getStringArray("value");
             String[] name = attributes.getStringArray("name");
+            Class<? extends Annotation> annotationClass = attributes.getClass("annotationClass");
 
 
             ClassPathBeanDefinitionScanner scanner = new ClassPathBeanDefinitionScanner(registry);
 
-            Object annotationClass = annotationAttributes.get("annotationClass");
-            AnnotationTypeFilter filter = new AnnotationTypeFilter(Panda.class);
+            AnnotationTypeFilter filter = new AnnotationTypeFilter(annotationClass);
             scanner.addIncludeFilter(filter);
 //        scanner.addExcludeFilter();
 
