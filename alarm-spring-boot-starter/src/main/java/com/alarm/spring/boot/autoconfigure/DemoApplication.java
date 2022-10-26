@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.lang.reflect.Constructor;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "com.alarm.spring.boot.autoconfigure.scan")
 //@PandaScan(value = "com.alarm.spring.boot.autoconfigure.panda",name = "hahaha")
 public class DemoApplication {
 
