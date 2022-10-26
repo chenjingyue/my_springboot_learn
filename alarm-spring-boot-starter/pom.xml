@@ -30,9 +30,8 @@
 
 <!--        <dependency>-->
 <!--            <groupId>org.springframework.boot</groupId>-->
-<!--            <artifactId>spring-boot-autoconfigure-processor</artifactId>-->
+<!--            <artifactId>spring-boot-starter-web</artifactId>-->
 <!--            <version>2.7.3</version>-->
-<!--            <optional>true</optional>-->
 <!--        </dependency>-->
 
         <dependency>
@@ -44,10 +43,9 @@
 
         <!-- https://mvnrepository.com/artifact/aspectj/aspectjweaver -->
         <dependency>
-            <groupId>aspectj</groupId>
+            <groupId>org.aspectj</groupId>
             <artifactId>aspectjweaver</artifactId>
-            <version>1.5.3</version>
-            <scope>compile</scope>
+            <version>1.7.3</version>
         </dependency>
 
         <dependency>
@@ -56,8 +54,23 @@
             <version>2.7.3</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+            <version>2.7.3</version>
+        </dependency>
 
-<!--        <dependency>-->
+
+        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.12.0</version>
+        </dependency>
+
+
+
+        <!--        <dependency>-->
 <!--            <groupId>org.springframework.boot</groupId>-->
 <!--            <artifactId>spring-boot-starter-test</artifactId>-->
 <!--            <scope>test</scope>-->

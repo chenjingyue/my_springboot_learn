@@ -1,2 +1,3 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.alarm.spring.boot.autoconfigure.AlarmAutoConfiguration
+com.alarm.spring.boot.autoconfigure.AlarmAutoConfiguration,\
+com.alarm.spring.boot.autoconfigure.RedisAutoConfiguration
