@@ -23,8 +23,8 @@ import rx.observables.SyncOnSubscribe;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
-@ComponentScan(excludeFilters = {
-        @ComponentScan.Filter(type = FilterType.CUSTOM, classes = MyTypeExcludeFilter.class)})
+//@ComponentScan(excludeFilters = {
+//        @ComponentScan.Filter(type = FilterType.CUSTOM, classes = MyTypeExcludeFilter.class)})
 //@MapperScan(basePackages = "com.cy.springbootlearndemo.mapper", markerInterface = BaseMapper.class)
 @EnableSwagger2
 //@EnableFeignClients
