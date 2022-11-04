@@ -28,9 +28,13 @@ total = 100000（十万） ,   chunkSize = 500,  pageSize = 500,    ItemWriter =
 3s20ms  2s688ms  2s522ms    2s978ms 2s581ms 2s501ms
 
 # 报错
-Cannot change the ExecutorType when there is an existing transaction
+    Cannot change the ExecutorType when there is an existing transaction
 位置 --> org.mybatis.spring.SqlSessionUtils.sessionHolder
 
+
+    Step already complete or not restartable, so no action to execute
+jobLauncher.run(job, jobParameters); 运行任务时添加一个不同的参数值
+创建任务时，设置 .incrementer(new RunIdIncrementer())
 
 
 # 多线程问题   MyBatisPagingItemReader
@@ -38,3 +42,8 @@ Cannot change the ExecutorType when there is an existing transaction
 多线程下，reader、processor、writer 都是通过线程处理，存在实际读取数据量大于设置的最大数量
 org.springframework.batch.item.support.AbstractItemCountingItemStreamItemReader.read()  currentItemCount字段非线程安全
 多线程操作currentItemCount++ 操作，可能会出现赋值覆盖（a,b线程都更新为同一值），导致变量统计到的数据量小于真实读取数据量
+
+
+
+# 事务提交
+org.springframework.batch.core.step.tasklet.TaskletStep#doExecute
