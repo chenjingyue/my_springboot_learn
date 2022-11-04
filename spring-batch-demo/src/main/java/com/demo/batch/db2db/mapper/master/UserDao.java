@@ -9,6 +9,7 @@ import java.util.List;
 public interface UserDao {
 
     List<User> selectAllUser();
+    List<User> selectAllUserLimitId();
 
     int insertUser(User user);
 

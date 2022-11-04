@@ -1,6 +1,9 @@
 package com.demo.batch.db2db.batch;
 
-import com.demo.batch.PersonItemProcessor;
+import com.demo.batch.db2db.batch.processor.UserItemProcessor;
+import com.demo.batch.db2db.batch.reader.MyBatchItemReader;
+import com.demo.batch.db2db.batch.reader.MyBatchPageItemReader;
+import com.demo.batch.db2db.batch.writer.MyBatchItemWriter;
 import com.demo.batch.db2db.config.DataSourceHolder;
 import com.demo.batch.db2db.entity.User;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -12,21 +15,25 @@ import org.mybatis.spring.batch.builder.MyBatisCursorItemReaderBuilder;
 import org.mybatis.spring.batch.builder.MyBatisPagingItemReaderBuilder;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
+import org.springframework.batch.core.StepContribution;
+import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.configuration.JobRegistry;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.support.JobRegistryBeanPostProcessor;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
-import org.springframework.batch.item.ItemProcessor;
+import org.springframework.batch.core.scope.context.ChunkContext;
+import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.item.ItemWriter;
+import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.convert.converter.Converter;
+import org.springframework.core.task.TaskExecutor;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.List;
-import java.util.UUID;
 
 @Configuration
 @EnableBatchProcessing
@@ -56,16 +63,50 @@ public class BatchConfig {
         return stepBuilderFactory
                 .get("userStep")
                 .<User, User>chunk(500)
-                .reader(pageReader())
+//                .reader(pageReader())
+                .reader(pageItemReader())
                 .processor(itemProcessor())
                 .writer(myItemWriter())
+//                .taskExecutor(myTaskExecutor())
+//                .allowStartIfComplete(false)
+//                .startLimit(1)
+//                .throttleLimit(5)
                 .build();
+    }
+
+    @Bean
+    public TaskExecutor myTaskExecutor() {
+
+        int corePoolSize = 4;
+        int maxPoolSize = 10;
+        int keepAliveSeconds = 100;
+        int queueCapacity = 20;
+
+        ThreadPoolTaskExecutor threadPoolTaskExecutor = new ThreadPoolTaskExecutor();
+        threadPoolTaskExecutor.setCorePoolSize(corePoolSize);
+        threadPoolTaskExecutor.setMaxPoolSize(maxPoolSize);
+        threadPoolTaskExecutor.setKeepAliveSeconds(keepAliveSeconds);
+        threadPoolTaskExecutor.setQueueCapacity(queueCapacity);
+
+        return threadPoolTaskExecutor;
     }
 
     @Bean
     public UserItemProcessor itemProcessor() {
         UserItemProcessor userItemProcessor = new UserItemProcessor();
         return userItemProcessor;
+    }
+
+    public void test(){
+        stepBuilderFactory.get("test")
+                .tasklet(new Tasklet() {
+                    @Override
+                    public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
+                        StepExecution stepExecution = contribution.getStepExecution();
+                        return null;
+                    }
+                })
+                .build();
     }
 
 
@@ -88,12 +129,30 @@ public class BatchConfig {
     public MyBatisPagingItemReader<User> pageReader() {
         MyBatisPagingItemReaderBuilder<User> readerBuilder = new MyBatisPagingItemReaderBuilder<>();
         MyBatisPagingItemReader<User> reader = readerBuilder
-                .pageSize(500)
+                .pageSize(10)
                 .queryId("com.demo.batch.db2db.mapper.master.UserDao.selectAllUser")
                 .sqlSessionFactory(sqlSessionFactory)
-//                .maxItemCount(20)
+                .maxItemCount(200)
                 .build();
         return reader;
+    }
+
+    public  MyBatisPagingItemReader<User> reader() {
+        MyBatchItemReader<User> userMyBatchItemReader = new MyBatchItemReader<>();
+//        userMyBatchItemReader.setMaxItemCount(200);
+        userMyBatchItemReader.setQueryId("com.demo.batch.db2db.mapper.master.UserDao.selectAllUser");
+        userMyBatchItemReader.setSqlSessionFactory(sqlSessionFactory);
+        userMyBatchItemReader.setPageSize(500);
+        return userMyBatchItemReader;
+    }
+
+    public MyBatchPageItemReader<User> pageItemReader() {
+        MyBatchPageItemReader<User> itemReader = new MyBatchPageItemReader<>();
+//        itemReader.setMaxItemCount(200);
+        itemReader.setQueryId("com.demo.batch.db2db.mapper.master.UserDao.selectAllUserLimitId");
+        itemReader.setSqlSessionFactory(sqlSessionFactory);
+        itemReader.setPageSize(500);
+        return itemReader;
     }
 
     /** ------ ItemReader ------ end---------*/

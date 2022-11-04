@@ -18,6 +18,23 @@ total = 4457 ,   chunkSize = 500,  pageSize = 10,    ItemWriter = 批量（一�
 total = 4457 ,   chunkSize = 500,  pageSize = 100,    ItemWriter = 批量（一次写500条）
 任务执行时间      623ms、631ms、599ms
 
+
+线程池
+total = 100000（十万） ,   chunkSize = 100,  pageSize = 100,    ItemWriter = 批量（一次写100条）
+任务执行时间      13s795ms
+
+
+total = 100000（十万） ,   chunkSize = 500,  pageSize = 500,    ItemWriter = 批量（一次写500条）
+3s20ms  2s688ms  2s522ms    2s978ms 2s581ms 2s501ms
+
 # 报错
 Cannot change the ExecutorType when there is an existing transaction
 位置 --> org.mybatis.spring.SqlSessionUtils.sessionHolder
+
+
+
+# 多线程问题   MyBatisPagingItemReader
+设置参数 .taskExecutor(TaskExecutor)        pageSize = 10   maxItemCount = 200
+多线程下，reader、processor、writer 都是通过线程处理，存在实际读取数据量大于设置的最大数量
+org.springframework.batch.item.support.AbstractItemCountingItemStreamItemReader.read()  currentItemCount字段非线程安全
+多线程操作currentItemCount++ 操作，可能会出现赋值覆盖（a,b线程都更新为同一值），导致变量统计到的数据量小于真实读取数据量

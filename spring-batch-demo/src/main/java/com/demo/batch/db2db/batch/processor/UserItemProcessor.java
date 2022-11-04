@@ -1,6 +1,5 @@
-package com.demo.batch.db2db.batch;
+package com.demo.batch.db2db.batch.processor;
 
-import com.demo.batch.db2db.config.DataSourceHolder;
 import com.demo.batch.db2db.entity.User;
 import com.demo.batch.db2db.mapper.master.UserDao;
 import org.slf4j.Logger;
@@ -30,9 +29,9 @@ public class UserItemProcessor implements ItemProcessor<User, User> {
         String name = user.getName().toUpperCase();
         int age = user.getAge() + 1;
         User transformedUser = new User();
-        transformedUser.setAge(age);
+        transformedUser.setAge(user.getId());
         transformedUser.setName(name);
-//        log.info("Converting (" + user + ") into (" + transformedUser + ")");
+//        log.info(Thread.currentThread().getName() + "--Converting (" + user + ") into (" + transformedUser + ")");
         return transformedUser;
     }
 

@@ -40,3 +40,11 @@ spring:
 
 mybatis:
   mapper-locations: classpath:mapper/*.xml
+
+#
+logging:
+  level:
+    com:
+      demo:
+        batch:
+          db2db: debug

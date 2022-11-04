@@ -28,6 +28,16 @@
         </foreach>
     </insert>
 
+    <select id="selectAllUserLimitId"  resultType="com.demo.batch.db2db.entity.User">
+        select id,name,age from user_info
+        <where>
+            <if test="_lastid != null and _lastid > 0">
+                id > #{_lastid}
+            </if>
+        </where>
+        limit #{_pagesize,jdbcType=INTEGER}
+    </select>
+
 
     <!--    <insert id="insertSelective" keyColumn="id" keyProperty="id"-->
     <!--            parameterType="com.andon.springbootmybatis.domain.TestTable" useGeneratedKeys="true">-->
