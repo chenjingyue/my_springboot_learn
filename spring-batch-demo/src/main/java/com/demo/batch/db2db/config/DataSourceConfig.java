@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
@@ -92,6 +93,11 @@ public class DataSourceConfig {
             factory.setMapperLocations(properties.resolveMapperLocations());
         }
         return factory;
+    }
+
+    @Bean(name = "multiplePlatformTransactionManager")
+    public DataSourceTransactionManager platformTransactionManager(@Qualifier("multipleDataSource") DataSource dataSource) {
+        return new DataSourceTransactionManager(dataSource);
     }
 
 

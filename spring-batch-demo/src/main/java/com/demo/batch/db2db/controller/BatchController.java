@@ -1,5 +1,6 @@
 package com.demo.batch.db2db.controller;
 
+import com.demo.batch.db2db.config.DataSourceHolder;
 import com.demo.batch.db2db.entity.User;
 import com.demo.batch.db2db.mapper.slave.UserToDao;
 import org.slf4j.Logger;
@@ -32,7 +33,7 @@ public class BatchController {
     private JobLauncher jobLauncher;
 
     @Autowired
-    private UserToDao userToDao;
+    private UserService userService;
 
 
     @GetMapping("/batch/job/{jobName}")
@@ -58,12 +59,9 @@ public class BatchController {
 
     @GetMapping("/test")
     public String test(){
-        User user = new User();
-        user.setName("test");
-        user.setAge(11);
-        List<User> list = new ArrayList<>();
-        list.add(user);
-        userToDao.insertUserBatch(list);
+
+        DataSourceHolder.set("slave");
+        userService.insertUser();
         return "aaa";
     }
 }
