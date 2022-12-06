@@ -63,25 +63,25 @@
         <!--            &lt;!&ndash;            <version>2.2.6.RELEASE</version>&ndash;&gt;-->
         <!--        </dependency>-->
 
-        <dependency>
-            <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
-            <version>2.1.1.RELEASE</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework.cloud</groupId>
-                    <artifactId>spring-cloud-starter-netflix</artifactId>
-                </exclusion>
-                <!--                <exclusion>-->
-                <!--                    <groupId>org.springframework.cloud</groupId>-->
-                <!--                    <artifactId>spring-cloud-starter-netflix-ribbon</artifactId>-->
-                <!--                </exclusion>-->
-                <exclusion>
-                    <groupId>org.springframework.cloud</groupId>
-                    <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.alibaba.cloud</groupId>-->
+<!--            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>-->
+<!--            <version>2.1.1.RELEASE</version>-->
+<!--            <exclusions>-->
+<!--                <exclusion>-->
+<!--                    <groupId>org.springframework.cloud</groupId>-->
+<!--                    <artifactId>spring-cloud-starter-netflix</artifactId>-->
+<!--                </exclusion>-->
+<!--                &lt;!&ndash;                <exclusion>&ndash;&gt;-->
+<!--                &lt;!&ndash;                    <groupId>org.springframework.cloud</groupId>&ndash;&gt;-->
+<!--                &lt;!&ndash;                    <artifactId>spring-cloud-starter-netflix-ribbon</artifactId>&ndash;&gt;-->
+<!--                &lt;!&ndash;                </exclusion>&ndash;&gt;-->
+<!--                <exclusion>-->
+<!--                    <groupId>org.springframework.cloud</groupId>-->
+<!--                    <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>-->
+<!--                </exclusion>-->
+<!--            </exclusions>-->
+<!--        </dependency>-->
 
 
         <!-- redis -->

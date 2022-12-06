@@ -44,7 +44,7 @@
         <springfox-swagger2.version>2.9.2</springfox-swagger2.version>
         <springfox-bean-validators.version>2.9.2</springfox-bean-validators.version>
         <springfox-bean-validators.version>2.9.2</springfox-bean-validators.version>
-        <spring-cloud.version>Finchley.SR2</spring-cloud.version>
+        <spring-cloud.version>2021.0.1</spring-cloud.version>
     </properties>
 
     <dependencies>

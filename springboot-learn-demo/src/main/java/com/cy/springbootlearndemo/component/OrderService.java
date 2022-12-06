@@ -13,8 +13,6 @@ import javax.annotation.PostConstruct;
 @Component
 public class OrderService implements BeanFactoryAware, InitializingBean {
 
-    @Autowired
-    private AccountService accountService;
 
 //    @Autowired
 //    private String name;

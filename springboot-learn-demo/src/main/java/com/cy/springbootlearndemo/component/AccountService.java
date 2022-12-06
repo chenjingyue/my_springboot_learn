@@ -8,8 +8,6 @@ import org.springframework.stereotype.Component;
 public class AccountService {
 
 
-    @Autowired
-    private OrderService orderService;
 
 
     public AccountService() {
