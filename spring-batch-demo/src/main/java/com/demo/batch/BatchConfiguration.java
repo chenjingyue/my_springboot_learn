@@ -13,14 +13,20 @@ import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 
 import javax.sql.DataSource;
 
-@Configuration
-@EnableBatchProcessing
+/**
+ *  BatchAutoConfiguration 自动配置类
+ *  BatchDataSourceInitializer org.springframework.boot.jdbc.AbstractDataSourceInitializer#initialize() 执行数据库初始化脚本
+ *
+ */
+//@Configuration
+//@EnableBatchProcessing
 public class BatchConfiguration {
 
     @Autowired
@@ -35,7 +41,7 @@ public class BatchConfiguration {
                 .name("personItemReader")
                 .resource(new ClassPathResource("sample-data.csv"))
                 .delimited()
-                .names(new String[]{"firstName", "lastName"})
+                .names("firstName", "lastName")
                 .fieldSetMapper(new BeanWrapperFieldSetMapper<Person>() {{
                     setTargetType(Person.class);
                 }})
@@ -77,5 +83,8 @@ public class BatchConfiguration {
                 .writer(writer)
                 .build();
     }
+
+
+
 
 }

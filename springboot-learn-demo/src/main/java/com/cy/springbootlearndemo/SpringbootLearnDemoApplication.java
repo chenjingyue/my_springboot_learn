@@ -9,22 +9,14 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.AutoConfigurationExcludeFilter;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.TypeExcludeFilter;
-import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.*;
 import org.springframework.web.client.RestTemplate;
-import rx.Observable;
-import rx.Observer;
-import rx.Subscriber;
-import rx.functions.Action1;
-import rx.functions.Func0;
-import rx.observables.AsyncOnSubscribe;
-import rx.observables.SyncOnSubscribe;
+
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
-@ComponentScan(excludeFilters = {
-        @ComponentScan.Filter(type = FilterType.CUSTOM, classes = MyTypeExcludeFilter.class)})
+//@ComponentScan(excludeFilters = {
+//        @ComponentScan.Filter(type = FilterType.CUSTOM, classes = MyTypeExcludeFilter.class)})
 //@MapperScan(basePackages = "com.cy.springbootlearndemo.mapper", markerInterface = BaseMapper.class)
 @EnableSwagger2
 //@EnableFeignClients

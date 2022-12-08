@@ -30,7 +30,7 @@ public class RoomServer {
                     });
             ChannelFuture cf = serverBootstrap.bind(9000).sync();
             //给cf注册监听器，监听我们关心的事件
-            /*cf.addListener(new ChannelFutureListener() {
+             cf.addListener(new ChannelFutureListener() {
                 @Override
                 public void operationComplete(ChannelFuture future) throws Exception {
                     if (cf.isSuccess()) {
@@ -39,7 +39,7 @@ public class RoomServer {
                         System.out.println("监听端口9000失败");
                     }
                 }
-            });*/
+            });
             cf.channel().closeFuture().sync();
         } finally {
             bossGroup.shutdownGracefully();

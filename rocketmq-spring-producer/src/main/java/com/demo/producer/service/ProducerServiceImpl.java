@@ -33,6 +33,7 @@ public class ProducerServiceImpl implements IProducerService {
         map.put("id", id);
         map.put("name", "name" + id);
         Message<Map<String, Object>> msg = MessageBuilder.withPayload(map).build();
+//        rocketMQTemplate.getProducer().setVipChannelEnabled(false);
         // In sendMessageInTransaction(), the first parameter transaction name ("test")
         // must be same with the @RocketMQTransactionListener's member field 'transName'
 //        rocketMQTemplate.sendMessageInTransaction("test-topic-1", msg, null);

@@ -25,7 +25,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         String str = "知识可羡，胜于财富——佚名《关于知识的经典语录》";
-        int count = 100;
+        int count = 1;
         for (int i = 0; i < count; i++) {
             ByteBuf byteBuf = Unpooled.copiedBuffer((str + i + "@").getBytes());
             ctx.writeAndFlush(byteBuf);

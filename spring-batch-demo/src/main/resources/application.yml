@@ -1,2 +1,50 @@
 server:
   port: 9999
+
+spring:
+  datasource:
+    hsqldb:
+      driverClassName: org.hsqldb.jdbc.JDBCDriver
+      url: jdbc:hsqldb:mem:test
+      username: sa
+      password:
+    master:
+      driverClassName: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/test?master=1&useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&failOverReadOnly=false&zeroDateTimeBehavior=convertToNull&tinyInt1isBit=false&useSSL=false&allowMultiQueries=true
+      username: root
+      password: root
+    slave:
+      driverClassName: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/test2?master=1&useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&failOverReadOnly=false&zeroDateTimeBehavior=convertToNull&tinyInt1isBit=false&useSSL=false&allowMultiQueries=true
+      username: root
+      password: root
+    default:
+      driverClassName: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/test?master=1&useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&failOverReadOnly=false&zeroDateTimeBehavior=convertToNull&tinyInt1isBit=false&useSSL=false&allowMultiQueries=true
+      username: root
+      password: root
+      #    driver-class-name: com.mysql.cj.jdbc.Driver
+#      url: jdbc:mysql://localhost/test?master=1&useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&failOverReadOnly=false&zeroDateTimeBehavior=convertToNull&tinyInt1isBit=false&useSSL=false&allowMultiQueries=true
+#      username: root
+#      password: root
+  sql:
+    init:
+      platform: all
+#      mode: always
+
+  batch:
+    jdbc:
+      platform: hsqldb
+    job:
+      enabled: false  # 关闭自动启动任务  JobLauncherApplicationRunner
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+
+#
+logging:
+  level:
+    com:
+      demo:
+        batch:
+          db2db: debug

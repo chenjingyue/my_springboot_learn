@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.demo.batch.db2db.mapper.master.UserDao">
+    <!--<cache type="com.example.my_springboot_learn.redis.cache1.RedisCache"/>-->
+
+    <resultMap id="userResultMap" type="com.demo.batch.db2db.entity.User">
+        <id column="id" jdbcType="INTEGER" property="id" javaType="java.lang.Integer"/>
+        <result column="name" jdbcType="VARCHAR" property="name" javaType="java.lang.String"></result>
+        <result column="age" jdbcType="INTEGER" property="age" javaType="java.lang.Integer"></result>
+    </resultMap>
+    <!--获取全部User-->
+    <select id="selectAllUser" resultType="com.demo.batch.db2db.entity.User">
+        <!--    <select id="selectAllUser" resultMap="userResultMap">-->
+        SELECT id,name,age FROM user_info  limit #{_skiprows,jdbcType=INTEGER},#{_pagesize,jdbcType=INTEGER}
+    </select>
+
+    <insert id="insertUser" parameterType="com.demo.batch.db2db.entity.User">
+        INSERT INTO user_info (name, age)
+        VALUES (#{name}, #{age})
+    </insert>
+
+    <insert id="insertUserBatch" parameterType="com.demo.batch.db2db.entity.User">
+        INSERT INTO `user_info` (`name`, `age`)
+        VALUES
+        <foreach collection="userList" item="user" separator=",">
+            (#{user.name,jdbcType=VARCHAR}, #{user.age,jdbcType=INTEGER})
+        </foreach>
+    </insert>
+
+    <select id="selectAllUserLimitId"  resultType="com.demo.batch.db2db.entity.User">
+        select id,name,age from user_info
+        <where>
+            <if test="_lastid != null and _lastid > 0">
+                id > #{_lastid}
+            </if>
+        </where>
+        limit #{_pagesize,jdbcType=INTEGER}
+    </select>
+
+
+    <!--    <insert id="insertSelective" keyColumn="id" keyProperty="id"-->
+    <!--            parameterType="com.andon.springbootmybatis.domain.TestTable" useGeneratedKeys="true">-->
+    <!--        &lt;!&ndash;@mbg.generated&ndash;&gt;-->
+    <!--        insert into test_table-->
+    <!--        <trim prefix="(" suffix=")" suffixOverrides=",">-->
+    <!--            <if test="key != null">-->
+    <!--                `key`,-->
+    <!--            </if>-->
+    <!--            <if test="value != null">-->
+    <!--                `value`,-->
+    <!--            </if>-->
+    <!--            <if test="updateTime != null">-->
+    <!--                update_time,-->
+    <!--            </if>-->
+    <!--            <if test="createTime != null">-->
+    <!--                create_time,-->
+    <!--            </if>-->
+    <!--        </trim>-->
+    <!--        <trim prefix="values (" suffix=")" suffixOverrides=",">-->
+    <!--            <if test="key != null">-->
+    <!--                #{key,jdbcType=VARCHAR},-->
+    <!--            </if>-->
+    <!--            <if test="value != null">-->
+    <!--                #{value,jdbcType=VARCHAR},-->
+    <!--            </if>-->
+    <!--            <if test="updateTime != null">-->
+    <!--                #{updateTime,jdbcType=TIMESTAMP},-->
+    <!--            </if>-->
+    <!--            <if test="createTime != null">-->
+    <!--                #{createTime,jdbcType=TIMESTAMP},-->
+    <!--            </if>-->
+    <!--        </trim>-->
+    <!--    </insert>-->
+    <!--    <update id="updateByPrimaryKeySelective" parameterType="com.andon.springbootmybatis.domain.TestTable">-->
+    <!--        &lt;!&ndash;@mbg.generated&ndash;&gt;-->
+    <!--        update test_table-->
+    <!--        <set>-->
+    <!--            <if test="key != null">-->
+    <!--                `key` = #{key,jdbcType=VARCHAR},-->
+    <!--            </if>-->
+    <!--            <if test="value != null">-->
+    <!--                `value` = #{value,jdbcType=VARCHAR},-->
+    <!--            </if>-->
+    <!--            <if test="updateTime != null">-->
+    <!--                update_time = #{updateTime,jdbcType=TIMESTAMP},-->
+    <!--            </if>-->
+    <!--            <if test="createTime != null">-->
+    <!--                create_time = #{createTime,jdbcType=TIMESTAMP},-->
+    <!--            </if>-->
+    <!--        </set>-->
+    <!--        where id = #{id,jdbcType=INTEGER}-->
+    <!--    </update>-->
+    <!--    <update id="updateByPrimaryKey" parameterType="com.andon.springbootmybatis.domain.TestTable">-->
+    <!--        &lt;!&ndash;@mbg.generated&ndash;&gt;-->
+    <!--        update test_table-->
+    <!--        set `key`       = #{key,jdbcType=VARCHAR},-->
+    <!--        `value`     = #{value,jdbcType=VARCHAR},-->
+    <!--        update_time = #{updateTime,jdbcType=TIMESTAMP},-->
+    <!--        create_time = #{createTime,jdbcType=TIMESTAMP}-->
+    <!--        where id = #{id,jdbcType=INTEGER}-->
+    <!--    </update>-->
+    <!--    <insert id="insertTestTableBatch">-->
+    <!--        INSERT INTO `test_table` (`key`, `value`)-->
+    <!--        VALUES-->
+    <!--        <foreach collection="testTableList" item="testTable" separator=",">-->
+    <!--            (#{testTable.key,jdbcType=VARCHAR}, #{testTable.value,jdbcType=VARCHAR})-->
+    <!--        </foreach>-->
+    <!--    </insert>-->
+
+
+</mapper>
